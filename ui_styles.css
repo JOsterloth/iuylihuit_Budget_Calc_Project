@@ -1,0 +1,13 @@
+/*Edit Later*/
+
+.logo{
+    display: inline;              
+    height: 3em;                 
+    width: auto;                 
+    vertical-align: middle; 
+}
+
+h1 p{
+    font-size: small;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}

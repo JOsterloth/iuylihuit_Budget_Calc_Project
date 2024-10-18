@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Budget Calculator</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="./ui_styles.css" id="logo">
+</head>
+<body>
+    <h1 id="project_name">
+        Budget Calculator <img class="logo" alt="money_logo" src="money_logo.jpg"><br>
+        <p>~ We Judge You For Your Purchases ~</p>
+        <br>
+    </h1>
+
+    <form action="./budget_calc.php" method="post">
+        <div class="username_input">
+            <label for="username">Full Name: </label><br>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <br>
+        <div class="totalfunds_input">
+            <label for="totalfunds">Total Funds: </label><br>
+            <input type="text" id="totalfunds" name="totalfunds" required>
+        </div>
+        <br>
+        <label for="budget_percentage">Amount you wish to budget: </label>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="budget_percentage" value="10" required>
+                10%
+            </label>
+            <label>
+                <input type="radio" name="budget_percentage" value="20">
+                20%
+            </label>
+            <label>
+                <input type="radio" name="budget_percentage" value="30">
+                30%
+            </label>
+            <label>
+                <input type="radio" name="budget_percentage" value="40">
+                40%
+            </label>
+            <label>
+                <input type="radio" name="budget_percentage" value="Custom" id="custom_budget_radio">
+                Custom Budget
+            </label>
+        </div>
+
+        <input type="text" name="custom_budget_percentage" placeholder="Enter Budget Percentage" style="display:none;" id="custom_budget_percentage_input">
+        <input type="text" name="custom_budget_amount" placeholder="Enter Budget Amount" style="display:none;" id="custom_budget_amount_input">
+        <br><br>
+        <button type="submit">Calculate Budget</button>
+    </form>
+
+    <script>
+        const customBudgetRadio = document.getElementById('custom_budget_radio');
+        const customBudgetPercentageInput = document.getElementById('custom_budget_percentage_input');
+        const customBudgetAmountInput = document.getElementById('custom_budget_amount_input');
+
+        customBudgetRadio.addEventListener('change', function() {
+            const isChecked = customBudgetRadio.checked;
+            customBudgetPercentageInput.style.display = isChecked ? 'inline' : 'none';
+            customBudgetAmountInput.style.display = isChecked ? 'inline' : 'none';
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
