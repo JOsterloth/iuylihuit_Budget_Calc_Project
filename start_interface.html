@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Budget Calculator</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="./ui_styles.css">
 </head>
+
 <body>
     <h1 id="project_name">
         Budget Calculator <img class="logo" alt="money_logo" src="money_logo.jpg"><br>
@@ -21,7 +23,7 @@
         <br>
         <div class="totalfunds_input">
             <label for="totalfunds">Total Funds: </label><br>
-            <input type="text" id="totalfunds" name="totalfunds" required>
+            $<input type="text" id="totalfunds" name="totalfunds" required>
         </div>
         <br>
         <label for="budget_percentage">Amount you wish to budget: </label>
@@ -48,8 +50,10 @@
             </label>
         </div>
 
-        <input type="text" name="custom_budget_percentage" placeholder="Enter Budget Percentage" style="display:none;" id="custom_budget_percentage_input">
-        <input type="text" name="custom_budget_amount" placeholder="Enter Budget Amount" style="display:none;" id="custom_budget_amount_input">
+        <input type="text" name="custom_budget_percentage" placeholder="Enter Budget Percentage" style="display:none;"
+            id="custom_budget_percentage_input">
+        <input type="text" name="custom_budget_amount" placeholder="Enter Budget Amount" style="display:none;"
+            id="custom_budget_amount_input">
         <br><br>
         <button type="submit">Calculate Budget</button>
     </form>
@@ -59,94 +63,12 @@
         const customBudgetPercentageInput = document.getElementById('custom_budget_percentage_input');
         const customBudgetAmountInput = document.getElementById('custom_budget_amount_input');
 
-        customBudgetRadio.addEventListener('change', function() {
+        customBudgetRadio.addEventListener('change', function () {
             const isChecked = customBudgetRadio.checked;
             customBudgetPercentageInput.style.display = isChecked ? 'inline' : 'none';
             customBudgetAmountInput.style.display = isChecked ? 'inline' : 'none';
         });
     </script>
 </body>
+
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
