@@ -1,28 +1,35 @@
-
-
 <?php // validate inputs from start_interface.html
-$username = null; //define default values for variables if they are not set. there's probably a better default value but for now this will suffice. 
+
+session_start();
+
+$username = null;
 $totalfunds = null;
 $budget_percentage = null;
 $budget_amount = null;
+
 if(isset($_POST['username'])){ //checking to see if the variables have been set before we assign them their sent values.
-    $username = $_POST['username'];
+    $_SESSION['username'] = $_POST['username'];
 }
 if(isset($_POST['totalfunds'])){ 
-    $totalfunds = $_POST['totalfunds'];
+    $_SESSION['totalfunds'] = $_POST['totalfunds'];
 }
 if(isset($_POST['budget_percentage'])){
-    $budget_percentage = $_POST['budget_percentage'];
-    if ($budget_percentage == "Custom"){ //This entire if/else lacks input validation
-      $budget_percentage = $_POST['custom_budget_percentage'];  //We don't check if this is set before we assign
-      $budget_amount = $POST['custom_budget_amount'];
+    if ($_POST['budget_percentage'] == "Custom"){ //This entire if/else lacks input validation
+      $_SESSION['budget_percentage'] = $_POST['custom_budget_percentage'];  //We don't check if this is set before we assign yet
+      $_SESSION['budget_amount'] = $POST['custom_budget_amount'];
     }
     else{
-        $budget_amount = $totalfunds*($budget_percentage/100); //nor do we check if $totalfunds was properly assigned.
+        $_SESSION['budget_percentage'] = $_POST['budget_percentage'];
+        $_SESSION['budget_amount'] = $_SESSION['totalfunds']*($_SESSION['budget_percentage']/100); //nor do we check if $totalfunds was properly assigned.
+        
     }    //TODO add more validation here
 }
-
-
+if(isset($_SESSION['username'])){ //lazy for now, since username is required then (technically?) these should be set as well
+    $username = $_SESSION['username'];
+    $totalfunds = $_SESSION['totalfunds'];
+    $budget_percentage = $_SESSION['budget_percentage'];
+    $budget_amount = $_SESSION['budget_amount'];
+}
 
 // include budget_calc.php to access methods
 
@@ -50,15 +57,38 @@ if(isset($_POST['budget_percentage'])){
     </h1>
     <p>
         <?php 
-        echo ("<h1> Hello, " . $username . "</h1>");
+        echo ("<h1> Hello, " . $username . "</h1>"); 
         echo ("Total funds: $" . $totalfunds . "<br>");
         echo ("You are attempting to budget " . $budget_percentage . "% of your total funds<br>");
-        echo ("Therefore, you are setting aside $" . $budget_amount);
-        
-        
+        echo ("Therefore, you are setting aside $" . $budget_amount . " and have $" . ($totalfunds-($budget_amount) . " to spend."));
         ?>
 </p>
-
+<div>
+<a href="purchase_interface.php">Add purchase</a>
+</div>
+<table>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Link</th>
+<?php
+if(isset($_SESSION['purchases'])){ //this block of code is ripped straight from purchase interface to prove to myself that the purchases are tracked between pages.
+    $purchases = $_SESSION['purchases']; //this isnt part of the final version
+    foreach ($purchases as $p){
+        $tr= "<tr>";
+        $tr .= ("<th>" . $p['item_name'] . "</th>"); 
+        $tr .= ("<th>" . $p['price'] . "</th>"); 
+        if($p['link']!=""){ 
+            $tr .= ("<th>" . $p['link'] . "</th>"); 
+        }
+        else{
+            $tr .= ("<th> N/A </th>");
+        }
+        $tr .= "</tr>";
+        echo $tr;
+    }
+}
+?>
+</table>
 </body>
 </html>
 
