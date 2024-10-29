@@ -8,8 +8,8 @@
             $_SESSION['purchases'] = [];
         }
         array_push($_SESSION['purchases'], array("item_name" => $_POST['item_name'],
-                    "price" => $_POST['price'], 
-                    "link" => $_POST['link'])); //adding whatever the form sent to this page to the purchases array
+                    "item_price" => $_POST['item_price'], 
+                    "item_link" => $_POST['item_link'])); //adding whatever the form sent to this page to the purchases array
     }
 ?>
 
@@ -49,9 +49,9 @@
         foreach ($purchases as $p){
             $tr= "<tr>";
             $tr .= ("<th>" . $p['item_name'] . "</th>"); 
-            $tr .= ("<th>" . $p['price'] . "</th>"); 
-            if($p['link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
-                $tr .= ("<th>" . $p['link'] . "</th>"); 
+            $tr .= ("<th>" . $p['item_price'] . "</th>"); 
+            if($p['item_link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
+                $tr .= ("<th>" . $p['item_link'] . "</th>"); 
             }
             else{
                 $tr .= ("<th> N/A </th>");

@@ -136,9 +136,9 @@ if(isset($_SESSION['purchases'])){ //this block of code is ripped straight from 
     foreach ($purchases as $p){
         $tr= "<tr>";
         $tr .= ("<th>" . $p['item_name'] . "</th>"); 
-        $tr .= ("<th>" . $p['price'] . "</th>"); 
-        if($p['link']!=""){ 
-            $tr .= ("<th>" . $p['link'] . "</th>"); 
+        $tr .= ("<th>" . $p['item_price'] . "</th>"); 
+        if($p['item_link']!=""){ 
+            $tr .= ("<th>" . $p['item_link'] . "</th>"); 
         }
         else{
             $tr .= ("<th> N/A </th>");
