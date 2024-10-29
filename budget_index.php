@@ -24,13 +24,6 @@ if (isset($_POST['username'])) {
     }
 }
 
-if(isset($_SESSION['username'])){ //lazy for now, since username is required then (technically?) these should be set as well
-    $username = $_SESSION['username'];
-    $totalfunds = $_SESSION['totalfunds'];
-    $budget_percentage = $_SESSION['budget_percentage'];
-    $budget_amount = $_SESSION['budget_amount'];
-}
-
 if (isset($_POST['totalfunds'])) {
     $totalfunds = sanitize_input($_POST['totalfunds']);
     if (is_numeric($totalfunds) && $totalfunds >= 0) {
@@ -53,9 +46,8 @@ if(isset($_POST['budget_percentage'])){
 }
 */
 //new budget validation
-if (isset($_POST['budget_percentage_']) && is_numeric($totalfunds) && isset($totalfunds)){
+if (isset($_POST['budget_percentage']) && is_numeric($totalfunds) && isset($totalfunds)){
     if ($_POST['budget_percentage'] == "Custom") {
-
         // Validate custom budget percentage
         if (isset($_POST['custom_budget_percentage'])) {
             $budget_percentage = sanitize_input($_POST['custom_budget_percentage']);
@@ -67,7 +59,6 @@ if (isset($_POST['budget_percentage_']) && is_numeric($totalfunds) && isset($tot
                 echo "Custom budget percentage must a number between 0 and 100.";
             }
         }
-
         // Validate custom budget amount
         $temp_var = null;
         if(isset($_POST['custom_budget_amount'])){        
@@ -86,7 +77,8 @@ if (isset($_POST['budget_percentage_']) && is_numeric($totalfunds) && isset($tot
         $budget_percentage = sanitize_input($_POST['budget_percentage']);
         if (is_numeric($budget_percentage) && $budget_percentage >= 0 && $budget_percentage <= 100) {
             $_SESSION['budget_percentage'] = floatval($budget_percentage);
-            $_SESSION['budget_amount'] = $_SESSION['totalfunds'] * ($_SESSION['budget_percentage'] / 100);
+            $budget_amount = $_SESSION['totalfunds'] * ($_SESSION['budget_percentage'] / 100);
+            $_SESSION['budget_amount'] = $budget_amount;
         } 
         else {
             echo "Budget percentage must be a number between 0 and 100.<br>";
