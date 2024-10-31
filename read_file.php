@@ -1,16 +1,21 @@
 <?php
-
+/**
+ * reads a file and spits back an array of purchases for each line
+ * 
+ * @param $file_superglobal. like, this: $_FILES['fileNameOrWhatever']
+ * @return array of arrays where each element is a purchase
+ */
 function readFileToArray($file_superglobal){
         $potentialPurchases = [];
         $openedFile = fopen($file_superglobal['tmp_name'], "r");
-        while(! feof($openedFile)){
+        while(! feof($openedFile)){ 
             $line = fgetcsv($openedFile);
             if(isset($line[2])){
                 array_push($potentialPurchases, array("item_name" => $line[0],
                         "item_price" => $line[1], 
                         "item_link" => $line[2])); 
             }
-            else{
+            else{ //if there is no provided link we just mark it as "N/A"
                 array_push($potentialPurchases, array("item_name" => $line[0],
                         "item_price" => $line[1], 
                         "item_link" => "N/A")); 
@@ -18,7 +23,13 @@ function readFileToArray($file_superglobal){
         }
     return $potentialPurchases;
 }
-
+/**
+ * creates a table and returns it as a string
+ * 
+ * @param string array - $tableHeads: array of strings that will be used as the tables heads
+ * @param two-dimensional array - $purchases: 2d array of purchases
+ * @return string that can be echoed 
+ */
 function createTableFromArray($tableHeads, $purchases){
     $table = "<table> <tr>";
     foreach($tableHeads as $th){
@@ -35,10 +46,7 @@ function createTableFromArray($tableHeads, $purchases){
     $table.="</table>";
     return $table;
 }
-if(isset($_FILES['textfiles'])){
-    $purchases = readFileToArray($_FILES['textfile']);
-    echo(createTableFromArray(array("Name", "Price", "Link"), $purchases));
-}
+
 
 ?>
 <!DOCTYPE html>
@@ -49,7 +57,24 @@ if(isset($_FILES['textfiles'])){
     <title>Document</title>
 </head>
 <body>
-    
-    
+    <h1>The following will be added to your purchases:</h1>
+    <?php
+        $purchases=[];
+        if(isset($_FILES['textfile'])){
+            $purchases = readFileToArray($_FILES['textfile']);
+            echo(createTableFromArray(array("Name", "Price", "Link"), $purchases));
+            session_start();
+            if(!isset($_SESSION['purchases'])){ //if the purchases array hasnt been set yet, we initialize as empty array
+                $_SESSION['purchases'] = [];
+            }
+            foreach($purchases as $p){
+                array_push($_SESSION['purchases'], array("item_name" => $p['item_name'],
+                        "item_price" => $p['item_price'], 
+                        "item_link" => $p['item_link'])); 
+            }
+        }
+    ?>
+    <a href="budget_index.php">Back to budget index</a> 
+</form>
 </body>
 </html>

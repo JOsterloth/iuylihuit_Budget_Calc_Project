@@ -61,13 +61,13 @@
         $purchases = $_SESSION['purchases'];
         foreach ($purchases as $p){
             $tr= "<tr>";
-            $tr .= ("<th>" . $p['item_name'] . "</th>"); 
-            $tr .= ("<th>" . $p['item_price'] . "</th>"); 
+            $tr .= ("<td>" . $p['item_name'] . "</td>"); 
+            $tr .= ("<td>" . $p['item_price'] . "</td>"); 
             if($p['item_link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
-                $tr .= ("<th>" . $p['item_link'] . "</th>"); 
+                $tr .= ("<td>" . $p['item_link'] . "</td>"); 
             }
             else{
-                $tr .= ("<th> N/A </th>");
+                $tr .= ("<td> N/A </td>");
             }
             $tr .= "</tr>";
             echo $tr;
