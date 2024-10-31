@@ -8,8 +8,8 @@
             $_SESSION['purchases'] = [];
         }
         array_push($_SESSION['purchases'], array("item_name" => $_POST['item_name'],
-                    "price" => $_POST['price'], 
-                    "link" => $_POST['link'])); //adding whatever the form sent to this page to the purchases array
+                    "item_price" => $_POST['item_price'], 
+                    "item_link" => $_POST['item_link'])); //adding whatever the form sent to this page to the purchases array
     }
 ?>
 
@@ -25,15 +25,15 @@
     <h1>
         Add purchase:
 </h1>
-<form action="./purchase_interface.php" method="post">
+<form action="./purchase_interface.php" method="post"> <!--Form action shoud be directed to budget_index-->
     <label for="item_name">Item name: </label><br>
     <input type="text" id="item_name" name="item_name" required><br>
 
     <label for="price">Item price: </label><br>
-    $<input type="number" id="price" name="price" required><br>
+    $<input type="number" id="item_price" name="item_price" required><br>
     
     <label for="link">Link to product (optional): </label><br>
-    <input type="text" id="link" name="link"><br>
+    <input type="text" id="link" name="item_link"><br>
 
     <button type="submit">Add purchase</button>
 </form>
@@ -49,9 +49,9 @@
         foreach ($purchases as $p){
             $tr= "<tr>";
             $tr .= ("<th>" . $p['item_name'] . "</th>"); 
-            $tr .= ("<th>" . $p['price'] . "</th>"); 
-            if($p['link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
-                $tr .= ("<th>" . $p['link'] . "</th>"); 
+            $tr .= ("<th>" . $p['item_price'] . "</th>"); 
+            if($p['item_link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
+                $tr .= ("<th>" . $p['item_link'] . "</th>"); 
             }
             else{
                 $tr .= ("<th> N/A </th>");
