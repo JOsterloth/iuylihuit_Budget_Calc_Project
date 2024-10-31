@@ -1,4 +1,8 @@
 <?php
+    /**
+     * @param
+     */
+    
     session_start(); //I know in the todo list it says that this file will send stuff to database, but for now (since we havent covered) database I'll be using sessions
     // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
     //idk just riffin ya know?
@@ -37,11 +41,16 @@
 
     <button type="submit">Add purchase</button>
 </form>
+
+<form action="./read_file.php" method="post" enctype="multipart/form-data"> <!-- -->
+    <label for="textfile">Choose a product file: </label>
+    <br>
+    <input type="file" id="textfile" name="textfile" accept=".txt, .csv, .docx" /> <!--accept attribute controls what files are allowed to be put in-->
+    <br>
+    <input type="submit" name="submitFile" value="Submit file">
+</form>
+
 <br>
-<label for="textfile">Choose a product file: </label>
-<br>
-<input type="file" id="textfile" name="textfile" accept=".txt, .csv, .docx" />
-<br><br>
 <table>
     <th>Name</th>
     <th>Price</th>
