@@ -38,6 +38,10 @@
     <button type="submit">Add purchase</button>
 </form>
 <br>
+<label for="textfile">Choose a product file: </label>
+<br>
+<input type="file" id="textfile" name="textfile" accept=".txt, .csv, .docx" />
+<br><br>
 <table>
     <th>Name</th>
     <th>Price</th>
@@ -63,5 +67,6 @@
     
 ?>
 </table>
+
 <a href="budget_index.php">Back to budget index</a> 
 </body>
