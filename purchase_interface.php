@@ -7,12 +7,15 @@
     // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
     //idk just riffin ya know?
 
+    require 'budget_calc.php';
+
     if(isset($_POST['item_name'])){ //since item_name is a required field, checking if just it is set should(?) be fine
         if(!isset($_SESSION['purchases'])){ //if the purchases array hasnt been set yet, we initialize as empty array
             $_SESSION['purchases'] = [];
         }
         array_push($_SESSION['purchases'], array("item_name" => $_POST['item_name'],
                     "item_price" => $_POST['item_price'], 
+                    "item_type" => $_POST['item_type'],
                     "item_link" => $_POST['item_link'])); //adding whatever the form sent to this page to the purchases array
     }
 ?>
@@ -35,6 +38,15 @@
 
     <label for="price">Item price: </label><br>
     $<input type="number" id="item_price" name="item_price" required><br>
+
+    <label for="item_type">Item type:</label>
+    <select select name="item_type" id="item_type">
+        <option value="Housing">Housing</option>
+        <option value="Utilities">Utilities</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Other">Other needs</option>
+        <option value="Want">Wants</option>
+  </select><br>
     
     <label for="link">Link to product (optional): </label><br>
     <input type="text" id="link" name="item_link"><br>
@@ -51,31 +63,10 @@
 </form>
 
 <br>
-<table>
-    <th>Name</th>
-    <th>Price</th>
-    <th>Link</th>
-<?php 
 
-    if(isset($_SESSION['purchases'])){ // This block of code pretty much just creates a table out of the purchases array
-        $purchases = $_SESSION['purchases'];
-        foreach ($purchases as $p){
-            $tr= "<tr>";
-            $tr .= ("<td>" . $p['item_name'] . "</td>"); 
-            $tr .= ("<td>" . $p['item_price'] . "</td>"); 
-            if($p['item_link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
-                $tr .= ("<td>" . $p['item_link'] . "</td>"); 
-            }
-            else{
-                $tr .= ("<td> N/A </td>");
-            }
-            $tr .= "</tr>";
-            echo $tr;
-        }
-    }
-    
+<?php 
+    echo displayPurchases();   
 ?>
-</table>
 
 <a href="budget_index.php">Back to budget index</a> 
 </body>
