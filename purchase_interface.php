@@ -1,4 +1,8 @@
 <?php
+    /**
+     * @param
+     */
+    
     session_start(); //I know in the todo list it says that this file will send stuff to database, but for now (since we havent covered) database I'll be using sessions
     // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
     //idk just riffin ya know?
@@ -37,6 +41,15 @@
 
     <button type="submit">Add purchase</button>
 </form>
+
+<form action="./read_file.php" method="post" enctype="multipart/form-data"> <!-- -->
+    <label for="textfile">Choose a product file: </label>
+    <br>
+    <input type="file" id="textfile" name="textfile" accept=".txt, .csv, .docx" /> <!--accept attribute controls what files are allowed to be put in-->
+    <br>
+    <input type="submit" name="submitFile" value="Submit file">
+</form>
+
 <br>
 <table>
     <th>Name</th>
@@ -48,13 +61,13 @@
         $purchases = $_SESSION['purchases'];
         foreach ($purchases as $p){
             $tr= "<tr>";
-            $tr .= ("<th>" . $p['item_name'] . "</th>"); 
-            $tr .= ("<th>" . $p['item_price'] . "</th>"); 
+            $tr .= ("<td>" . $p['item_name'] . "</td>"); 
+            $tr .= ("<td>" . $p['item_price'] . "</td>"); 
             if($p['item_link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
-                $tr .= ("<th>" . $p['item_link'] . "</th>"); 
+                $tr .= ("<td>" . $p['item_link'] . "</td>"); 
             }
             else{
-                $tr .= ("<th> N/A </th>");
+                $tr .= ("<td> N/A </td>");
             }
             $tr .= "</tr>";
             echo $tr;
@@ -63,5 +76,6 @@
     
 ?>
 </table>
+
 <a href="budget_index.php">Back to budget index</a> 
 </body>
