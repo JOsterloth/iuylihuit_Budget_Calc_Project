@@ -4,7 +4,9 @@
 
 // displayTotalCash()
 
-
+/**
+ * basically returns a message showing how much each purchase category is affecting the budget
+ */
 function displayRemainingBudget(){
     $housing = 0;
     $utilities = 0;
@@ -24,20 +26,24 @@ function displayRemainingBudget(){
                 case 'Groceries':
                     $groceries += $p['item_price'];
                     break;
-                case 'Other':
-                    $other += $p['item_price'];
-                    break;
                 case 'Wants':
                     $wants += $p['item_price'];
                     break;
+                default: //currently just adding any non-matches to the 'Other' category. 
+                    $other += $p['item_price'];
+                    break;
+                    
             }
         }
+        $remaining = $_SESSION['totalfunds'] - $_SESSION['budget_amount']; // accessing potentially null value jumpscare
+        $remaining = $remaining - ($housing + $utilities + $groceries + $other + $wants);
         $display = "<p>You are spending: <br> 
                     $$housing on housing, <br>
                     $$utilities on utilities, <br>
                     $$groceries on groceries, <br>
-                    $$other on other necessities, <br>
-                    and $$wants on wants. </p>";
+                    $$other on other, <br>
+                    and $$wants on wants. <br>
+                    You currently have $$remaining remaining. </p>";
     }
     else{
         $display = "<p>You haven't added any purchases</p>";

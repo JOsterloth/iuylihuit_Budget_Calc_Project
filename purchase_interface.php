@@ -44,8 +44,8 @@
         <option value="Housing">Housing</option>
         <option value="Utilities">Utilities</option>
         <option value="Groceries">Groceries</option>
-        <option value="Other">Other needs</option>
-        <option value="Want">Wants</option>
+        <option value="Other">Other</option>
+        <option value="Wants">Wants</option>
   </select><br>
     
     <label for="link">Link to product (optional): </label><br>
