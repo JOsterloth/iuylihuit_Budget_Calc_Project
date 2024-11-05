@@ -1,6 +1,7 @@
 <?php // validate inputs from start_interface.html
 
 session_start();
+require 'budget_calc.php';
 
 $username = null;
 $totalfunds = null;
@@ -84,11 +85,22 @@ if (isset($_POST['budget_percentage']) && is_numeric($totalfunds) && isset($tota
             echo "Budget percentage must be a number between 0 and 100.<br>";
         }
     }
-        
 
-    
 }
-
+    //quick fix since we dont assign session variables to local variables after the inital post form
+    if(isset($_SESSION['username'])){
+        $username = $_SESSION['username'];
+    }
+    if(isset($_SESSION['totalfunds'])){
+        $totalfunds = $_SESSION['totalfunds'];
+    }
+    if(isset($_SESSION['budget_percentage'])){
+        $budget_percentage = $_SESSION['budget_percentage'];
+    }
+    if(isset($_SESSION['budget_amount'])){
+        $budget_amount = $_SESSION['budget_amount'];
+    }
+    $spendingMoney = $totalfunds-($budget_amount);
 // include budget_calc.php to access methods
 
 
@@ -120,35 +132,16 @@ if (isset($_POST['budget_percentage']) && is_numeric($totalfunds) && isset($tota
         echo ("<h1> Hello, " . $username . "</h1>"); 
         echo ("Total funds: $" . $totalfunds . "<br>");
         echo ("You are attempting to budget " . $budget_percentage . "% of your total funds<br>");
-        echo ("Therefore, you are setting aside $" . $budget_amount . " and have $" . ($totalfunds-($budget_amount) . " to spend."));
+        echo ("Therefore, you are setting aside $" . $budget_amount . " and have $" . ($spendingMoney . " to spend."));
         ?>
 </p>
+<?php
+    echo displayRemainingBudget();
+?>
 <div>
 <a href="purchase_interface.php">Add purchase</a>
 </div>
-<table>
-    <th>Name</th>
-    <th>Price</th>
-    <th>Link</th>
-<?php
-if(isset($_SESSION['purchases'])){ //this block of code is ripped straight from purchase interface to prove to myself that the purchases are tracked between pages.
-    $purchases = $_SESSION['purchases']; //this isnt part of the final version
-    foreach ($purchases as $p){
-        $tr= "<tr>";
-        $tr .= ("<td>" . $p['item_name'] . "</td>"); 
-        $tr .= ("<td>" . $p['item_price'] . "</td>"); 
-        if($p['item_link']!=""){ 
-            $tr .= ("<td>" . $p['item_link'] . "</td>"); 
-        }
-        else{
-            $tr .= ("<td> N/A </td>");
-        }
-        $tr .= "</tr>";
-        echo $tr;
-    }
-}
-?>
-</table>
+
 </body>
 </html>
 
