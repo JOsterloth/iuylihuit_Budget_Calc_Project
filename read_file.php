@@ -9,21 +9,26 @@
  */
 function readFileToArray($file_superglobal){
         $potentialPurchases = [];
-        $openedFile = fopen($file_superglobal['tmp_name'], "r");
-        while(! feof($openedFile)){ 
-            $line = fgetcsv($openedFile);
-            if(isset($line[3])){
-                array_push($potentialPurchases, array("item_name" => $line[0],
-                        "item_price" => $line[1], 
-                        "item_type" => $line[2],
-                        "item_link" => $line[3])); 
+        if(file_exists($file_superglobal['tmp_name'])){
+            $openedFile = fopen($file_superglobal['tmp_name'], "r");
+            while(! feof($openedFile)){ 
+                $line = fgetcsv($openedFile);
+                if(isset($line[3])){
+                    array_push($potentialPurchases, array("item_name" => $line[0],
+                            "item_price" => $line[1], 
+                            "item_type" => $line[2],
+                            "item_link" => $line[3])); 
+                }
+                else{ //if there is no provided link we just mark it as "N/A"
+                    array_push($potentialPurchases, array("item_name" => $line[0],
+                            "item_price" => $line[1], 
+                            "item_type" => $line[2],
+                            "item_link" => "N/A")); 
             }
-            else{ //if there is no provided link we just mark it as "N/A"
-                array_push($potentialPurchases, array("item_name" => $line[0],
-                        "item_price" => $line[1], 
-                        "item_type" => $line[2],
-                        "item_link" => "N/A")); 
-            }
+        }
+        }
+        else{
+            echo("Error! File not found!");
         }
     return $potentialPurchases;
 }
