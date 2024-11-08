@@ -114,5 +114,9 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
 }
 
 
+// Need a way to calculate the value of all item_price and check against budget threshold
+// before giving a good or bad rating depeending on severity of over budgeting /
+// remainder of total funds available.
+
 
 
