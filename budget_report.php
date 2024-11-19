@@ -119,4 +119,33 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
 // remainder of total funds available.
 
 
+function analyzeBudget($pdo, $budget) {
+    try {
+        $sql = "SELECT SUM(item_price) AS total_price FROM purchase";
+        $stmt = $pdo->query($sql);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $totalPrice = $result['total_price'] ?? 0; 
+
+        echo "Total Spent: $" . $totalPrice . "<br>";
+        echo "Budget Threshold: $" . $budget . "<br>";
+
+        if ($totalPrice > $budget) {
+            $overBudget = $totalPrice - $budget;
+            echo "You are over budget by $" . $overBudget . ". Consider reducing expenses.<br>";
+            if ($overBudget > $budget) { 
+                echo "Warning: Overspending detected.<br>";
+            }
+        } 
+        elseif ($totalPrice == $budget) {
+            echo "You are exactly on budget. Good job managing your expenses!<br>";
+        } 
+        else {
+            $remainingBudget = $budget - $totalPrice;
+            echo "You are under budget by $" . $remainingBudget . ". Keep up the good work!<br>";
+        }
+    } catch (PDOException $e) {
+        echo "Error analyzing budget: " . $e->getMessage() . "<br>";
+    }
+}
 
