@@ -65,7 +65,9 @@ function displayItemPrices($pdo) {
 
 
 // insertNewPurchase() function that includes link
-function insertNewPurchase_Link($pdo, $name, $price, $type, $link) {
+// slightly edited this and its sister function. instead of two differently named functions, you can just
+//overload the function with the same name
+function insertNewPurchase($pdo, $name, $price, $type, $link) {
     try {
         $insertItemSql = "
         INSERT INTO purchase (item_name, item_price, item_type, link)
@@ -89,9 +91,8 @@ function insertNewPurchase_Link($pdo, $name, $price, $type, $link) {
     }
 }
 
-
 // insertNewPurchase() function without link
-function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
+function insertNewPurchase($pdo, $name, $price, $type) {
     try {
         // The 'link' field will default to NULL when not included
         $insertItemSql = "
