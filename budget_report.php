@@ -178,3 +178,25 @@ function insertNewUser($pdo, $username, $password){
     }
        
 }
+/**
+ * basically, this takes a username and password and checks if a matching combination of username + password exists in the db. current implementation might not work
+ */
+function validateCredentials($pdo, $username, $password){
+    try{
+        $sql = "SELECT FROM users password WHERE username=(:username)";
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $dbpw = ($stmt->execute()); //i have no idea if this will even work
+
+        if(md5($password)==$dbpw){
+            return true;
+        }
+        return false;
+    }catch (PDOException $e) {
+        echo "Error logging in: " . $e->getMessage() . "<br>";
+        return false;
+    }
+
+
+}
