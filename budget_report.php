@@ -78,11 +78,11 @@ function displayItemPrices($pdo) {
 
 
 // insertNewPurchase() function that includes link
-function insertNewPurchase_Link($pdo, $name, $price, $type, $link) {
+function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
     try {
         $insertItemSql = "
-        INSERT INTO purchase (item_name, item_price, item_type, link)
-        VALUES (:name, :price, :type, :link)";
+        INSERT INTO purchase (item_name, item_price, item_type, link, username)
+        VALUES (:name, :price, :type, :link, :username)";
         
         $stmt = $pdo->prepare($insertItemSql);
 
@@ -90,6 +90,7 @@ function insertNewPurchase_Link($pdo, $name, $price, $type, $link) {
         $stmt->bindParam(':price', $price, PDO::PARAM_INT);
         $stmt->bindParam(':type', $type, PDO::PARAM_STR);
         $stmt->bindParam(':link', $link, PDO::PARAM_STR);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
 
         // Execute the statement
         $stmt->execute();
@@ -116,6 +117,8 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->bindParam(':price', $price, PDO::PARAM_INT);
         $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        
         $stmt->execute();
 
         echo "New purchase added successfully.<br>";
