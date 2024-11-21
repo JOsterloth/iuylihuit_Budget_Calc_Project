@@ -2,8 +2,6 @@
 // This file is where all the inputs from starting_interface and purchase_interface are displayed after they are used to calculate remaining budget.
 
 
-// displayTotalCash()
-
 // displayRemainingBudget()
 
 //displayPurchases()

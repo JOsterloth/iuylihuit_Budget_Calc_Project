@@ -6,18 +6,48 @@
     session_start(); //I know in the todo list it says that this file will send stuff to database, but for now (since we havent covered) database I'll be using sessions
     // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
     //idk just riffin ya know?
-
+    require 'budget_report.php';
     require 'budget_calc.php';
 
-    if(isset($_POST['item_name'])){ //since item_name is a required field, checking if just it is set should(?) be fine
-        if(!isset($_SESSION['purchases'])){ //if the purchases array hasnt been set yet, we initialize as empty array
-            $_SESSION['purchases'] = [];
-        }
-        array_push($_SESSION['purchases'], array("item_name" => $_POST['item_name'],
-                    "item_price" => $_POST['item_price'], 
-                    "item_type" => $_POST['item_type'],
-                    "item_link" => $_POST['item_link'])); //adding whatever the form sent to this page to the purchases array
+    if (!isset($_SESSION['purchases'])) {
+        $_SESSION['purchases'] = [];
     }
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['item_name'])) {
+        $itemName = trim($_POST['item_name']);
+        $itemPrice = intval($_POST['item_price']);
+        $itemType = trim($_POST['item_type']);
+        $itemLink = !empty($_POST['item_link']) ? trim($_POST['item_link']) : null;
+    
+        // Validate inputs
+        if (empty($itemName) || $itemPrice <= 0 || empty($itemType)) {
+            echo "All required fields must be filled correctly.<br>";
+        } else {
+            $_SESSION['purchases'][] = [
+                "item_name" => $itemName,
+                "item_price" => $itemPrice,
+                "item_type" => $itemType,
+                "item_link" => $itemLink,
+            ];
+    
+            // Save to database
+            try {
+                if ($itemLink) {
+                    insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink);
+                }
+                
+                else {    
+                    insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType);
+                }
+                echo "Purchase successfully added to the database.<br>";
+            } 
+        
+            catch (Exception $e) {
+                echo "Error adding purchase to the database: " . $e->getMessage() . "<br>";
+            }
+        }
+    }
+
 ?>
 
 <!DOCTYPE html>
