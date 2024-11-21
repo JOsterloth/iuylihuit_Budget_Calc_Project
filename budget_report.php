@@ -14,20 +14,33 @@ try {
 
     // Switch to the 'purchases_db' database
     $pdo->exec("USE purchases_db");
-    // Add `purchase` table
+    // Add `purchases` table
     $createTableSql = "
-    CREATE TABLE IF NOT EXISTS `purchase` (
-      `item_id` INT(11) UNSIGNED NOT NULL,
-      `item_name` VARCHAR(256) NOT NULL,
-      `item_price` INT(11) UNSIGNED NOT NULL,
-      `item_type` VARCHAR(256) NOT NULL,
-      `link` VARCHAR(256) DEFAULT NULL COMMENT 'This category is optional.',
-      PRIMARY KEY (`item_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    CREATE TABLE IF NOT EXISTS `purchases` (
+        `item_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+        `username` varchar(15) NOT NULL,
+        `item_name` varchar(256) NOT NULL,
+        `item_price` double NOT NULL,
+        `item_type` varchar(256) NOT NULL,
+        `link` varchar(256) DEFAULT NULL COMMENT 'This category is optional',
+        PRIMARY KEY (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
     ";
 
     $pdo->exec($createTableSql);
-    echo "Table 'purchase' created successfully.<br>";
+    echo "Table 'purchases' created successfully.<br>";
+
+    //add users table
+    $createTableSql ="
+    CREATE TABLE `users` (
+        `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+        `username` varchar(15) NOT NULL,
+        `password` varchar(64) NOT NULL,
+        PRIMARY KEY (`user_id`,`username`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+
+    $pdo->exec($createTableSql);
+    echo "Table 'users' created successfully.<br>";
 
     $dbname = $pdo->query('SELECT database()')->fetchColumn();  
     echo "Connected to the database: " . $dbname; 
@@ -148,5 +161,20 @@ function analyzeBudget($pdo, $budget) {
         echo "Error analyzing budget: " . $e->getMessage() . "<br>";
     }
 }
+/**
+ * basically, it inserts a new user using username and password. user_id is auto increment so we dont have to fill that field out (currently debating if we even need
+ * user_id. could instead make username the sole primary key and make usernames unique among users)
+ */
+function insertNewUser($pdo, $username, $password){
+    try{
+        $sql = "INSERT INTO `users` (username, password) VALUES (:username, :password)";
+        $parameters = [":username" => $username, ":password" => md5($password)];
 
-
+        $statement= $db->prepare($sql);
+        $statement->execute($parameters);
+    }
+    catch (PDOException $e) {
+        echo "Error inserting new user: " . $e->getMessage() . "<br>";
+    }
+       
+}
