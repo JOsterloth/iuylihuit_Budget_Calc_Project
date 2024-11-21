@@ -36,14 +36,18 @@ function displayRemainingBudget(){
             }
         }
         $remaining = $_SESSION['totalfunds'] - $_SESSION['budget_amount']; // accessing potentially null value jumpscare
-        $remaining = $remaining - ($housing + $utilities + $groceries + $other + $wants);
-        $display = "<p>You are spending: <br> 
-                    $$housing on housing, <br>
-                    $$utilities on utilities, <br>
-                    $$groceries on groceries, <br>
-                    $$other on other, <br>
-                    and $$wants on wants. <br>
-                    You currently have $$remaining remaining. </p>";
+        $budget_remaining = $_SESSION['budget_amount']- ($housing + $utilities + $groceries + $other + $wants);
+
+        $total_remaining = $remaining - ($housing + $utilities + $groceries + $other + $wants);
+
+        $display = "<p>You have spent: <br> 
+                    $$housing on housing. <br>
+                    $$utilities on utilities. <br>
+                    $$groceries on groceries. <br>
+                    $$other on other. <br>
+                    $$wants on wants. <br>
+                    You have $$budget_remaining in your budget. <br>
+                    You currently have $$total_remaining remaining. </p>";
     }
     else{
         $display = "<p>You haven't added any purchases</p>";
@@ -62,7 +66,7 @@ function displayPurchases(){
         foreach ($purchases as $p){
             $tr= "<tr>";
             $tr .= ("<td>" . $p['item_name'] . "</td>"); 
-            $tr .= ("<td>" . $p['item_price'] . "</td>"); 
+            $tr .= ("<td>$" . $p['item_price'] . "</td>"); 
             $tr .= ("<td>" . $p['item_type'] . "</td>"); 
             if($p['item_link']!=""){ // idk why, but the form sends link out as an empty string if the user doesnt put anything in. I assume this is a blunder on my part, so for now this if statement is like this
                 $tr .= ("<td>" . $p['item_link'] . "</td>"); 

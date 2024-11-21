@@ -33,85 +33,51 @@ if (isset($_POST['totalfunds'])) {
         echo "Total funds must be a non-negative number.<br>";
     }
 }
-/*
-if(isset($_POST['budget_percentage'])){
-    if ($_POST['budget_percentage'] == "Custom"){ //This entire if/else lacks input validation
-      $_SESSION['budget_percentage'] = $_POST['custom_budget_percentage'];  //We don't check if this is set before we assign yet
-      $_SESSION['budget_amount'] = $POST['custom_budget_amount'];
-    }
-    else{
-        $_SESSION['budget_percentage'] = $_POST['budget_percentage'];
-        $_SESSION['budget_amount'] = $_SESSION['totalfunds']*($_SESSION['budget_percentage']/100); //nor do we check if $totalfunds was properly assigned.
-        
-    }    //TODO add more validation here
-}
-*/
-//new budget validation
-if (isset($_POST['budget_percentage']) && is_numeric($totalfunds) && isset($totalfunds)){
-    if ($_POST['budget_percentage'] == "Custom") {
-        // Validate custom budget percentage
-        if (isset($_POST['custom_budget_percentage'])) {
-            $budget_percentage = sanitize_input($_POST['custom_budget_percentage']);
-            if (is_numeric($budget_percentage) && $budget_percentage >= 0 && $budget_percentage <= 100) {
-                $_SESSION['budget_percentage'] = floatval($budget_percentage);
-                $_SESSION['budget_amount'] = $_SESSION['totalfunds'] * ($_SESSION['budget_percentage'] / 100);
-            }
-            else {
-                echo "Custom budget percentage must a number between 0 and 100.";
+
+
+// Process budget input
+if (isset($_POST['budget_percentage']) && isset($_SESSION['totalfunds'])) {
+    $totalfunds = $_SESSION['totalfunds'];
+
+    if ($_POST['budget_percentage'] === "Custom") {
+        // Custom percentage
+        if (!empty($_POST['custom_budget_percentage'])) {
+            $custom_budget_percentage = sanitize_input($_POST['custom_budget_percentage']);
+            if (is_numeric($custom_budget_percentage) && $custom_budget_percentage >= 0 && $custom_budget_percentage <= 100) {
+                $_SESSION['budget_percentage'] = floatval($custom_budget_percentage);
+                $_SESSION['budget_amount'] = $totalfunds * ($_SESSION['budget_percentage'] / 100);
+            } else {
+                echo "Custom budget percentage must be between 0 and 100.<br>";
             }
         }
-        // Validate custom budget amount
-        $temp_var = null;
-        if(isset($_POST['custom_budget_amount'])){        
+
+        // Custom amount
+        if (!empty($_POST['custom_budget_amount'])) {
             $custom_budget_amount = sanitize_input($_POST['custom_budget_amount']);
-            if (is_numeric($custom_budget_amount) && $custom_budget_amount >= 0 && $custom_budget_amount < $totalfunds ) { 
-                $_SESSION['temp_var'] = floatval($custom_budget_amount);
-                $_SESSION['budget_amount'] = $_SESSION['totalfunds'] - ($_SESSION['temp_var']);
-            }
-            else {
-                echo "Custom budget amount cannot be a number more than total funds.";
+            if (is_numeric($custom_budget_amount) && $custom_budget_amount >= 0 && $custom_budget_amount <= $totalfunds) {
+                $_SESSION['budget_percentage'] = null; // Clear percentage since amount is custom
+                $_SESSION['budget_amount'] = floatval($custom_budget_amount);
+            } else {
+                echo "Custom budget amount must be between 0 and total funds.<br>";
             }
         }
-    } 
-    else {
-        // Validate standard budget percentage
+    } else {
+        // Standard percentage
         $budget_percentage = sanitize_input($_POST['budget_percentage']);
         if (is_numeric($budget_percentage) && $budget_percentage >= 0 && $budget_percentage <= 100) {
             $_SESSION['budget_percentage'] = floatval($budget_percentage);
-            $budget_amount = $_SESSION['totalfunds'] * ($_SESSION['budget_percentage'] / 100);
-            $_SESSION['budget_amount'] = $budget_amount;
-        } 
-        else {
-            echo "Budget percentage must be a number between 0 and 100.<br>";
+            $_SESSION['budget_amount'] = $totalfunds * ($_SESSION['budget_percentage'] / 100);
+        } else {
+            echo "Budget percentage must be between 0 and 100.<br>";
         }
     }
-
 }
-    //quick fix since we dont assign session variables to local variables after the inital post form
-    if(isset($_SESSION['username'])){
-        $username = $_SESSION['username'];
-    }
-    if(isset($_SESSION['totalfunds'])){
-        $totalfunds = $_SESSION['totalfunds'];
-    }
-    if(isset($_SESSION['budget_percentage'])){
-        $budget_percentage = $_SESSION['budget_percentage'];
-    }
-    if(isset($_SESSION['budget_amount'])){
-        $budget_amount = $_SESSION['budget_amount'];
-    }
-    $spendingMoney = $totalfunds-($budget_amount);
-// include budget_calc.php to access methods
 
-
-// send start_interface.html inputs into methods  
-// methods should display inital parameters of budget
-// ex: Total cash, budget percentage, etc..
-
-// open purchase_interface.php, get inputs and calculate current budget with methods.
-// direct user to budget_view.php to let them see how purchases affect remaining cash. 
-
-
+$username = $_SESSION['username'] ?? null;
+$totalfunds = $_SESSION['totalfunds'] ?? 0;
+$budget_percentage = $_SESSION['budget_percentage'] ?? null;
+$budget_amount = $_SESSION['budget_amount'] ?? 0;
+$remaining_money = $totalfunds - $budget_amount;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -129,12 +95,24 @@ if (isset($_POST['budget_percentage']) && is_numeric($totalfunds) && isset($tota
     </h1>
     <p>
         <?php 
-        echo ("<h1> Hello, " . $username . "</h1>"); 
-        echo ("Total funds: $" . $totalfunds . "<br>");
-        echo ("You are attempting to budget " . $budget_percentage . "% of your total funds<br>");
-        echo ("Therefore, you are setting aside $" . $budget_amount . " and have $" . ($spendingMoney . " to spend."));
+        echo "<h1>Hello, " . htmlspecialchars($username) . "</h1>"; 
+        echo "Total funds: $" . number_format($totalfunds, 2) . "<br>";
+
+        if (isset($_POST['budget_percentage']) && $_POST['budget_percentage'] === "Custom") {
+            if (!empty($custom_budget_percentage)) {
+                echo "You have chosen a custom budget percentage of " . number_format($custom_budget_percentage, 2) . "%.<br>";
+            }
+            if (!empty($custom_budget_amount)) {
+                echo "You have chosen a custom budget amount of $" . number_format($custom_budget_amount, 2) . ".<br>";
+            }
+        } elseif ($budget_percentage !== null) {
+            echo "You are budgeting " . number_format($budget_percentage, 2) . "% of your total funds.<br>";
+        }
+
+        echo "Budget amount: $" . number_format($budget_amount, 2) . "<br>";
+        echo "Remaining money: $" . number_format($remaining_money, 2) . "<br>";
         ?>
-</p>
+    </p>
 <?php
     echo displayRemainingBudget();
 ?>

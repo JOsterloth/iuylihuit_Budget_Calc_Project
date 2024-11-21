@@ -65,9 +65,7 @@ function displayItemPrices($pdo) {
 
 
 // insertNewPurchase() function that includes link
-// slightly edited this and its sister function. instead of two differently named functions, you can just
-//overload the function with the same name
-function insertNewPurchase($pdo, $name, $price, $type, $link) {
+function insertNewPurchase_Link($pdo, $name, $price, $type, $link) {
     try {
         $insertItemSql = "
         INSERT INTO purchase (item_name, item_price, item_type, link)
@@ -91,8 +89,9 @@ function insertNewPurchase($pdo, $name, $price, $type, $link) {
     }
 }
 
+
 // insertNewPurchase() function without link
-function insertNewPurchase($pdo, $name, $price, $type) {
+function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
     try {
         // The 'link' field will default to NULL when not included
         $insertItemSql = "
@@ -118,19 +117,19 @@ function insertNewPurchase($pdo, $name, $price, $type) {
 // Need a way to calculate the value of all item_price and check against budget threshold
 // before giving a good or bad rating depeending on severity of over budgeting /
 // remainder of total funds available.
-
-
 function analyzeBudget($pdo, $budget) {
     try {
+        // Calculate the total value of all item prices
         $sql = "SELECT SUM(item_price) AS total_price FROM purchase";
         $stmt = $pdo->query($sql);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $totalPrice = $result['total_price'] ?? 0; 
+        $totalPrice = $result['total_price'] ?? 0; // Default to 0 if no items are found
 
         echo "Total Spent: $" . $totalPrice . "<br>";
         echo "Budget Threshold: $" . $budget . "<br>";
 
+        // Compare total price with budget
         if ($totalPrice > $budget) {
             $overBudget = $totalPrice - $budget;
             echo "You are over budget by $" . $overBudget . ". Consider reducing expenses.<br>";
@@ -149,4 +148,5 @@ function analyzeBudget($pdo, $budget) {
         echo "Error analyzing budget: " . $e->getMessage() . "<br>";
     }
 }
+
 
