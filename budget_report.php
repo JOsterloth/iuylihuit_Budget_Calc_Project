@@ -2,11 +2,11 @@
 // This file will connect to the database to store information and retrieve data when it is time to create a budget analysis report.
 
 $host = 'localhost';
-$username = 'root';
-$password = '';
+$db_username = 'root';
+$db_password = '';
 
 try {
-    $pdo = new PDO("mysql:host=$host", $username, $password);
+    $pdo = new PDO("mysql:host=$host", $db_username, $db_password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
     $pdo->exec("CREATE DATABASE IF NOT EXISTS purchases_db");
@@ -32,7 +32,7 @@ try {
 
     //add users table
     $createTableSql ="
-    CREATE TABLE `users` (
+    CREATE TABLE IF NOT EXISTS `users` (
         `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
         `username` varchar(15) NOT NULL,
         `password` varchar(64) NOT NULL,
@@ -105,7 +105,7 @@ function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
 
 
 // insertNewPurchase() function without link
-function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
+function insertNewPurchase_NoLink($pdo, $name, $price, $type, $username) {
     try {
         // The 'link' field will default to NULL when not included
         $insertItemSql = "
@@ -168,12 +168,17 @@ function analyzeBudget($pdo, $budget) {
  * basically, it inserts a new user using username and password. user_id is auto increment so we dont have to fill that field out (currently debating if we even need
  * user_id. could instead make username the sole primary key and make usernames unique among users)
  */
-function insertNewUser($pdo, $username, $password){
+function insertNewUser($username, $password){
     try{
+        $pdo = new PDO("mysql:host=localhost", 'root', '');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $pdo->exec("USE purchases_db");
+
         $sql = "INSERT INTO `users` (username, password) VALUES (:username, :password)";
         $parameters = [":username" => $username, ":password" => md5($password)];
 
-        $statement= $db->prepare($sql);
+        $statement= $pdo->prepare($sql);
         $statement->execute($parameters);
     }
     catch (PDOException $e) {
@@ -184,9 +189,14 @@ function insertNewUser($pdo, $username, $password){
 /**
  * basically, this takes a username and password and checks if a matching combination of username + password exists in the db. current implementation might not work
  */
-function validateCredentials($pdo, $username, $password){
+function validateCredentials($username, $password){
     try{
-        $sql = "SELECT FROM users password WHERE username=(:username)";
+        $pdo = new PDO("mysql:host=localhost", 'root', '');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $pdo->exec("USE purchases_db");
+
+        $sql = "SELECT password FROM users WHERE username=(:username)";
         $stmt = $pdo->prepare($sql);
 
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);

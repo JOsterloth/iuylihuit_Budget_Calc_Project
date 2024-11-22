@@ -16,13 +16,11 @@ function sanitize_input($data) {
     return htmlspecialchars(strip_tags(trim($data)));
 }
 
-if (isset($_POST['username'])) {
-    $username = sanitize_input($_POST['username']);
-    if (!empty($username)) {
-        $_SESSION['username'] = $username;
-    } else {
-        echo "Username is required.<br>";
-    }
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+}
+else{
+    $username = "Anonymous"; //idk, just something to denote that the current user is not logged in
 }
 
 if (isset($_POST['totalfunds'])) {
@@ -73,7 +71,7 @@ if (isset($_POST['budget_percentage']) && isset($_SESSION['totalfunds'])) {
     }
 }
 
-$username = $_SESSION['username'] ?? null;
+// $username = $_SESSION['username'] ?? null; this is instead handled by login page and a prior if statement. keeping it commented for now just in case
 $totalfunds = $_SESSION['totalfunds'] ?? 0;
 $budget_percentage = $_SESSION['budget_percentage'] ?? null;
 $budget_amount = $_SESSION['budget_amount'] ?? 0;
