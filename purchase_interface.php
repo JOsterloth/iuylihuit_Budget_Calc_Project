@@ -33,11 +33,11 @@
             // Save to database
             try {
                 if ($itemLink) {
-                    insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink);
+                    insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink, $username);
                 }
                 
                 else {    
-                    insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType);
+                    insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType, $username);
                 }
                 echo "Purchase successfully added to the database.<br>";
             } 

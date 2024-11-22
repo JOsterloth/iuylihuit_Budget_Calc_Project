@@ -1,6 +1,7 @@
 <?php
 // This file will connect to the database to store information and retrieve data when it is time to create a budget analysis report.
-
+include_once "pdo_connect.php";
+/*
 $host = 'localhost';
 $username = 'root';
 $password = '';
@@ -52,7 +53,7 @@ catch (PDOException $e) {
     die();  // Exit the script if the connection fails
 }
 
-
+*/
 
 function displayItemPrices($pdo) {
     try {
@@ -105,12 +106,12 @@ function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
 
 
 // insertNewPurchase() function without link
-function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
+function insertNewPurchase_NoLink($pdo, $name, $price, $type, $username) {
     try {
         // The 'link' field will default to NULL when not included
         $insertItemSql = "
-        INSERT INTO purchase (item_name, item_price, item_type) 
-        VALUES (:name, :price, :type)";
+        INSERT INTO purchase (item_name, item_price, item_type, username) 
+        VALUES (:name, :price, :type, :username)";
         
         $stmt = $pdo->prepare($insertItemSql);
 
@@ -136,7 +137,7 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type) {
 function analyzeBudget($pdo, $budget) {
     try {
         // Calculate the total value of all item prices
-        $sql = "SELECT SUM(item_price) AS total_price FROM purchase";
+        $sql = "SELECT SUM(item_price) AS total_price FROM purchases";
         $stmt = $pdo->query($sql);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -173,7 +174,7 @@ function insertNewUser($pdo, $username, $password){
         $sql = "INSERT INTO `users` (username, password) VALUES (:username, :password)";
         $parameters = [":username" => $username, ":password" => md5($password)];
 
-        $statement= $db->prepare($sql);
+        $statement= $pdo->prepare($sql);
         $statement->execute($parameters);
     }
     catch (PDOException $e) {
@@ -186,7 +187,7 @@ function insertNewUser($pdo, $username, $password){
  */
 function validateCredentials($pdo, $username, $password){
     try{
-        $sql = "SELECT FROM users password WHERE username=(:username)";
+        $sql = "SELECT password FROM users WHERE username = :username";
         $stmt = $pdo->prepare($sql);
 
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
