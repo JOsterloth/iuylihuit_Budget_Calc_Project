@@ -2,6 +2,7 @@
 
 session_start();
 require 'budget_calc.php';
+require 'budget_report.php';
 
 $username = null;
 $totalfunds = null;
@@ -114,9 +115,7 @@ $remaining_money = $totalfunds - $budget_amount;
         echo "Remaining money: $" . number_format($remaining_money, 2) . "<br>";
         ?>
     </p>
-<?php
-    echo displayRemainingBudget();
-?>
+
 <div>
 <a href="purchase_interface.php">Add Purchase</a>
 </div>

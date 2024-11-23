@@ -60,7 +60,7 @@ function displayRemainingBudget(){
  */
 function displayPurchases(){
     $t = "";
-    if(isset($_SESSION['purchases'])){ // This block of code pretty much just creates a table out of the purchases array
+    if(isset($_SESSION['purchases'])){ 
         $t = "<table> <th>Name</th> <th>Price</th> <th>Type</th> <th>Link</th>";
         $purchases = $_SESSION['purchases'];
         foreach ($purchases as $p){

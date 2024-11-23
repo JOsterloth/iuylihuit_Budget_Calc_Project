@@ -2,11 +2,66 @@
 <?php 
 // This file will connect to the database to store information and retrieve data when it is time to create a budget analysis report.
 
+/*
+
+$host = 'localhost';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS purchases_db");
+    echo "Database 'purchases_db' created successfully (if it didn't exist already).<br>";
+
+    // Switch to the 'purchases_db' database
+    $pdo->exec("USE purchases_db");
+    // Add `purchases` table
+    $createTableSql = "
+    CREATE TABLE IF NOT EXISTS `purchases` (
+        `item_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+        `username` varchar(15) NOT NULL,
+        `item_name` varchar(256) NOT NULL,
+        `item_price` double NOT NULL,
+        `item_type` varchar(256) NOT NULL,
+        `link` varchar(256) DEFAULT NULL COMMENT 'This category is optional',
+        PRIMARY KEY (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    ";
+
+    $pdo->exec($createTableSql);
+    echo "Table 'purchases' created successfully.<br>";
+
+    //add users table
+    $createTableSql ="
+    CREATE TABLE `users` (
+        `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+        `username` varchar(15) NOT NULL,
+        `password` varchar(64) NOT NULL,
+        PRIMARY KEY (`user_id`,`username`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+
+    $pdo->exec($createTableSql);
+    echo "Table 'users' created successfully.<br>";
+
+    $dbname = $pdo->query('SELECT database()')->fetchColumn();  
+    echo "Connected to the database: " . $dbname; 
+
+} 
+catch (PDOException $e) {
+    // Handle any exceptions (e.g., connection failure)
+    echo "Error!: " . $e->getMessage() . "<br>";
+    die();  // Exit the script if the connection fails
+}
+
+*/
+
 include_once "pdo_connect.php";
 
 function displayItemPrices($pdo) {
     try {
-        $sql = "SELECT item_price FROM purchase";
+        $sql = "SELECT item_name, item_price FROM purchases";
         $stmt = $pdo->query($sql);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -14,7 +69,8 @@ function displayItemPrices($pdo) {
             echo "Item Prices:<br>";
             foreach ($rows as $item) {
                 // Display the item price for each row
-                echo "Price: " . $item['item_price'] . "<br>";
+                
+                echo "Item: ".$item['item_name']."  "."Price: " . $item['item_price'] . "<br>";
             }
         } 
         else {
@@ -36,9 +92,9 @@ function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
         
         $stmt = $pdo->prepare($insertItemSql);
 
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $stmt->bindParam(':price', $price, PDO::PARAM_INT);
-        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->bindParam(':item_name', $name, PDO::PARAM_STR);
+        $stmt->bindParam(':item_price', $price, PDO::PARAM_INT);
+        $stmt->bindParam(':item_type', $type, PDO::PARAM_STR);
         $stmt->bindParam(':link', $link, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
 
@@ -60,13 +116,13 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type, $username) {
         // The 'link' field will default to NULL when not included
         $insertItemSql = "
         INSERT INTO purchases (item_name, item_price, item_type, username) 
-        VALUES (:name, :price, :type, :username)";
+        VALUES (:item_name, :item_price, :item_type, :username)";
         
         $stmt = $pdo->prepare($insertItemSql);
 
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
-        $stmt->bindParam(':price', $price, PDO::PARAM_INT);
-        $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+        $stmt->bindParam(':item_name', $name, PDO::PARAM_STR);
+        $stmt->bindParam(':item_price', $price, PDO::PARAM_INT);
+        $stmt->bindParam(':item_type', $type, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         
         $stmt->execute();
@@ -80,9 +136,17 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type, $username) {
 }
 
 
-// Need a way to calculate the value of all item_price and check against budget threshold
-// before giving a good or bad rating depeending on severity of over budgeting /
-// remainder of total funds available.
+function clearPurchasesTable($pdo) {
+    try {
+        $sql = "DELETE FROM purchases";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        echo "All items have been removed from the purchases table.<br>";
+    } catch (PDOException $e) {
+        echo "Error clearing purchases table: " . $e->getMessage() . "<br>";
+    }
+}
+
 function analyzeBudget($pdo, $budget) {
     try {
         // Calculate the total value of all item prices

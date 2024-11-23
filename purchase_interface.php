@@ -95,7 +95,8 @@
 <br>
 
 <?php 
-    echo displayPurchases();   
+    $your_purchases = displayPurchases();
+    echo $your_purchases;   
 ?>
 
 <a href="budget_index.php">Back to budget index</a> 
