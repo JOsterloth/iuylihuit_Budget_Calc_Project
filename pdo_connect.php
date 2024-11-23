@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     echo "Table 'users' created successfully.<br>";
 
     $dbname = $pdo->query('SELECT database()')->fetchColumn();  
-    echo "Connected to the database: " . $dbname; 
+    echo "Connected to the database: " . $dbname."<br>"; 
 
 } 
 catch (PDOException $e) {

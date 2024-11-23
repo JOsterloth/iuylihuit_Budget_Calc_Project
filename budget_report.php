@@ -1,7 +1,9 @@
-<?php
+
+<?php 
 // This file will connect to the database to store information and retrieve data when it is time to create a budget analysis report.
-include_once "pdo_connect.php";
+
 /*
+
 $host = 'localhost';
 $username = 'root';
 $password = '';
@@ -55,6 +57,8 @@ catch (PDOException $e) {
 
 */
 
+include_once "pdo_connect.php";
+
 function displayItemPrices($pdo) {
     try {
         $sql = "SELECT item_price FROM purchase";
@@ -82,7 +86,7 @@ function displayItemPrices($pdo) {
 function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
     try {
         $insertItemSql = "
-        INSERT INTO purchase (item_name, item_price, item_type, link, username)
+        INSERT INTO purchases (item_name, item_price, item_type, link, username)
         VALUES (:name, :price, :type, :link, :username)";
         
         $stmt = $pdo->prepare($insertItemSql);
@@ -110,7 +114,7 @@ function insertNewPurchase_NoLink($pdo, $name, $price, $type, $username) {
     try {
         // The 'link' field will default to NULL when not included
         $insertItemSql = "
-        INSERT INTO purchase (item_name, item_price, item_type, username) 
+        INSERT INTO purchases (item_name, item_price, item_type, username) 
         VALUES (:name, :price, :type, :username)";
         
         $stmt = $pdo->prepare($insertItemSql);
