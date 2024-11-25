@@ -2,6 +2,7 @@
 
 session_start();
 require 'budget_calc.php';
+require 'budget_report.php';
 
 $username = null;
 $totalfunds = null;
@@ -32,7 +33,16 @@ if (isset($_POST['totalfunds'])) {
     }
 }
 
-
+// New: Add funds to totalfunds
+if (isset($_POST['add_funds'])) {
+    $additional_funds = sanitize_input($_POST['additional_funds']);
+    if (is_numeric($additional_funds) && $additional_funds > 0) {
+        $_SESSION['totalfunds'] += floatval($additional_funds);  // Increase total funds
+        echo "Funds successfully added!<br>";
+    } else {
+        echo "Please enter a valid amount to add.<br>";
+    }
+}
 // Process budget input
 if (isset($_POST['budget_percentage']) && isset($_SESSION['totalfunds'])) {
     $totalfunds = $_SESSION['totalfunds'];
@@ -87,7 +97,7 @@ $remaining_money = $totalfunds - $budget_amount;
     <link rel="stylesheet" href="./ui_styles.css">
 </head>
 <body>
-    <h1 id="project_name"> <!--Shamelessly stole this from start_interface.html until I know what this page will look more like-->
+    <h1 id="project_name"> 
         Budget Calculator <img class="logo" alt="money_logo" src="money_logo.jpg"><br>
         <p>~ We Judge You For Your Purchases ~</p>
         <hr>
@@ -112,9 +122,13 @@ $remaining_money = $totalfunds - $budget_amount;
         echo "Remaining money: $" . number_format($remaining_money, 2) . "<br>";
         ?>
     </p>
-<?php
-    echo displayRemainingBudget();
-?>
+    
+    <form method="POST" action="">
+        <label for="additional_funds">Add Funds: </label>
+        <input type="number" id="additional_funds" name="additional_funds" required>
+        <input type="submit" name="add_funds" value="Add Funds">
+    </form>
+
 <div>
 <a href="purchase_interface.php">Add Purchase</a>
 </div>

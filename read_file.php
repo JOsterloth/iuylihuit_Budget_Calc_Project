@@ -71,14 +71,15 @@ function createTableFromArray($tableHeads, $purchases){
         $purchases=[];
         if(isset($_FILES['textfile'])){
             $purchases = readFileToArray($_FILES['textfile']);
-            echo(createTableFromArray(array("Name", "Price", "Link"), $purchases));
+            echo(createTableFromArray(array("Name", "Price","Type","Link"), $purchases));
             session_start();
             if(!isset($_SESSION['purchases'])){ //if the purchases array hasnt been set yet, we initialize as empty array
                 $_SESSION['purchases'] = [];
             }
             foreach($purchases as $p){
                 array_push($_SESSION['purchases'], array("item_name" => $p['item_name'],
-                        "item_price" => $p['item_price'], 
+                        "item_price" => $p['item_price'],
+                        "item_type" => $p['item_type'], 
                         "item_link" => $p['item_link'])); 
             }
         }
