@@ -57,6 +57,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="./ui_styles.css">
+    <script>
+        // JavaScript function to validate file input
+        function validateFileInput(event) {
+            const fileInput = document.getElementById('textfile');
+            if (fileInput.value === '') {
+                alert('Please choose a file before submitting.');
+                event.preventDefault(); // Prevent the form from submitting
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>
@@ -83,16 +93,14 @@
 
     <button type="submit">Add purchase</button>
 </form>
-
-<form action="./read_file.php" method="post" enctype="multipart/form-data"> <!-- -->
+<br>
+<form action="./read_file.php" method="post" enctype="multipart/form-data" onsubmit="validateFileInput(event)"> <!-- -->
     <label for="textfile">Choose a product file: </label>
     <br>
     <input type="file" id="textfile" name="textfile" accept=".txt, .csv, .docx" /> <!--accept attribute controls what files are allowed to be put in-->
     <br>
     <input type="submit" name="submitFile" value="Submit file">
 </form>
-
-<br>
 
 <?php 
     $your_purchases = displayPurchases();
