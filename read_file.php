@@ -7,31 +7,37 @@
  * @param $file_superglobal. like, this: $_FILES['fileNameOrWhatever']
  * @return array of arrays where each element is a purchase
  */
-function readFileToArray($file_superglobal){
-        $potentialPurchases = [];
-        if(file_exists($file_superglobal['tmp_name'])){
-            $openedFile = fopen($file_superglobal['tmp_name'], "r");
-            while(! feof($openedFile)){ 
-                $line = fgetcsv($openedFile);
-                if(isset($line[3])){
-                    array_push($potentialPurchases, array("item_name" => $line[0],
-                            "item_price" => $line[1], 
-                            "item_type" => $line[2],
-                            "item_link" => $line[3])); 
-                }
-                else{ //if there is no provided link we just mark it as "N/A"
-                    array_push($potentialPurchases, array("item_name" => $line[0],
-                            "item_price" => $line[1], 
-                            "item_type" => $line[2],
-                            "item_link" => "N/A")); 
+function readFileToArray($file_superglobal) {
+    $potentialPurchases = [];
+
+    if (file_exists($file_superglobal['tmp_name'])) {
+        $openedFile = fopen($file_superglobal['tmp_name'], "r");
+        
+        while (!feof($openedFile)) {
+            $line = fgetcsv($openedFile);
+
+            // If the line is not false and has at least 3 elements
+            if ($line && count($line) >= 3) {
+                $potentialPurchases[] = [
+                    "item_name" => $line[0],
+                    "item_price" => $line[1],
+                    "item_type" => $line[2],
+                    "item_link" => $line[3] ?? "N/A"
+                ];
+            } elseif ($line) {
+                // If the line exists but has fewer than 3 elements
+                echo "<script>alert('File is in incorrect format. Please ensure each line has at least three elements.');</script>";
+                fclose($openedFile);  // Close the file before returning
+                return [];  // Return an empty array indicating an error in format
             }
         }
-        }
-        else{
-            echo("Error! File not found!");
-        }
+
+        fclose($openedFile);
+    }
+
     return $potentialPurchases;
 }
+
 /**
  * creates a table and returns it as a string
  * 
@@ -40,7 +46,7 @@ function readFileToArray($file_superglobal){
  * @return string that can be echoed 
  */
 function createTableFromArray($tableHeads, $purchases){
-    $table = "<table> <tr>";
+    $table = "<table border ='1'> <tr>";
     foreach($tableHeads as $th){
         $table.="<th>$th</th>";
     }
@@ -56,34 +62,49 @@ function createTableFromArray($tableHeads, $purchases){
     return $table;
 }
 
-
+// Form Submission Logic
+$fileSelected = true;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check if a file was selected before processing
+    if (empty($_FILES['textfile']['name'])) {
+        echo "<script>alert('Please choose a file before submitting.');</script>";
+        $fileSelected = false; // File not selected, but continue to render the HTML
+    }
+}
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="ui_styles.css">
 </head>
 <body>
     <h1>The following will be added to your purchases:</h1>
     <?php
-        $purchases=[];
-        if(isset($_FILES['textfile'])){
-            $purchases = readFileToArray($_FILES['textfile']);
-            echo(createTableFromArray(array("Name", "Price","Type","Link"), $purchases));
-            session_start();
-            if(!isset($_SESSION['purchases'])){ //if the purchases array hasnt been set yet, we initialize as empty array
-                $_SESSION['purchases'] = [];
-            }
-            foreach($purchases as $p){
-                array_push($_SESSION['purchases'], array("item_name" => $p['item_name'],
-                        "item_price" => $p['item_price'],
-                        "item_type" => $p['item_type'], 
-                        "item_link" => $p['item_link'])); 
-            }
-        }
+if ($fileSelected && isset($_FILES['textfile']) && $_FILES['textfile']['error'] === UPLOAD_ERR_OK) {
+    $purchases = readFileToArray($_FILES['textfile']);
+    echo(createTableFromArray(array("Name", "Price", "Type", "Link"), $purchases));
+
+    // Save the purchases to the session
+    if (!isset($_SESSION['purchases'])) {
+        $_SESSION['purchases'] = [];
+    }
+    foreach ($purchases as $p) {
+        $_SESSION['purchases'][] = [
+            "item_name" => $p['item_name'],
+            "item_price" => $p['item_price'],
+            "item_type" => $p['item_type'],
+            "item_link" => $p['item_link']
+        ];
+    }
+}
     ?>
+    
     <a href="budget_index.php">Back to budget index</a> 
 </form>
 </body>
