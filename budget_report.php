@@ -180,6 +180,8 @@ function insertNewUser($username, $password){
 
         $statement= $pdo->prepare($sql);
         $statement->execute($parameters);
+
+        echo("<br>Successfully added new user.");
     }
     catch (PDOException $e) {
         echo "Error inserting new user: " . $e->getMessage() . "<br>";

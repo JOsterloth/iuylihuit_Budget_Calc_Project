@@ -30,21 +30,24 @@
                 "item_link" => $itemLink,
             ];
     
-            // Save to database
-            try {
-                if ($itemLink) {
-                    insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink);
+            // Save to database IF user is logged in
+            if(isset($_SESSION['username'])){
+                try {
+                    if ($itemLink) {
+                        insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink);
+                    }
+                    
+                    else {    
+                        insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType);
+                    }
+                    echo "Purchase successfully added to the database.<br>";
+                } 
+            
+                catch (Exception $e) {
+                    echo "Error adding purchase to the database: " . $e->getMessage() . "<br>";
                 }
-                
-                else {    
-                    insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType);
-                }
-                echo "Purchase successfully added to the database.<br>";
-            } 
-        
-            catch (Exception $e) {
-                echo "Error adding purchase to the database: " . $e->getMessage() . "<br>";
             }
+            
         }
     }
 
