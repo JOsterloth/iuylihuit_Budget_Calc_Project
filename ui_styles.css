@@ -139,27 +139,3 @@ table tr:nth-child(even) td {
 table tr:hover td {
     background-color: #e9ecef;
 }
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-
-    form {
-        width: 100%;
-        padding: 15px;
-    }
-
-    button {
-        font-size: 1em;
-    }
-
-    .logo {
-        height: 2em;
-    }
-
-    h1 {
-        font-size: 1.5em;
-    }
-}
