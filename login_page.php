@@ -8,7 +8,7 @@
     if(isset($_POST['username']) && isset($_POST['password'])){
         $username = sanitize_input($_POST['username']);
         $password = sanitize_input($_POST['password']);
-        if(validateCredentials($username, $password)){ 
+        if(validateCredentials($pdo, $username, $password)){ 
             $_SESSION['username'] = $username;
             // I dont think we need to keep password information for the session
         }

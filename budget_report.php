@@ -117,7 +117,7 @@ function analyzeBudget($pdo, $budget) {
  * basically, it inserts a new user using username and password. user_id is auto increment so we dont have to fill that field out (currently debating if we even need
  * user_id. could instead make username the sole primary key and make usernames unique among users)
  */
-function insertNewUser($username, $password){
+function insertNewUser($pdo, $username, $password){
     try{
         $pdo = new PDO("mysql:host=localhost", 'root', '');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -140,7 +140,7 @@ function insertNewUser($username, $password){
 /**
  * basically, this takes a username and password and checks if a matching combination of username + password exists in the db. current implementation might not work
  */
-function validateCredentials($username, $password){
+function validateCredentials($pdo, $username, $password){
     try{
         $sql = "SELECT password FROM users WHERE username = :username";
         $stmt = $pdo->prepare($sql);
