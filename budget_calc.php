@@ -81,6 +81,15 @@ function displayPurchases(){
                 Remove item
                 </button>
                 </form>");
+            if(isset($_SESSION['username'])){ //only users can add to db
+                $tr .= ("<td><form method='post' action='purchase_interface.php' class='inline'>
+                <input type='hidden' name='addtodb' value='$i'>
+                <button type='submit' name='submit_param' value='submit_value' class='link-button'>
+                Finalize
+                </button>
+                </form>");
+            }
+            
             $tr .= "</tr>";
             $t.= $tr;
         }

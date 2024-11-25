@@ -28,31 +28,22 @@
                 "item_price" => $itemPrice,
                 "item_type" => $itemType,
                 "item_link" => $itemLink,
-            ];
-    
-            // Save to database IF user is logged in
-            if(isset($_SESSION['username'])){
-                try {
-                    if ($itemLink) {
-                        insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink, $username);
-                    }
-                    
-                    else {    
-                        insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType, $username);
-                    }
-                    echo "Purchase successfully added to the database.<br>";
-                } 
-            
-                catch (Exception $e) {
-                    echo "Error adding purchase to the database: " . $e->getMessage() . "<br>";
-                }
-
-            }
-            
+            ];           
         }
     }
     if(isset($_POST['element'])){
         $i = intval($_POST['element']);
+        unset($_SESSION['purchases'][$i]);
+    }
+    if(isset($_POST['addtodb'])){ //this post cannot be sent if the username is not set, thus we dont have to check if it is
+        $i = intval($_POST['addtodb']);
+        $p = $_SESSION['purchases'][$i];
+        if($p['item_link']){
+            insertNewPurchase_Link($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $p['item_link'], $_SESSION['username']);
+        }
+        else{
+            insertNewPurchase_NoLink($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $_SESSION['username']);
+        }
         unset($_SESSION['purchases'][$i]);
     }
 ?>
