@@ -98,6 +98,6 @@
     $your_purchases = displayPurchases();
     echo $your_purchases;   
 ?>
-
-<a href="budget_index.php">Back to budget index</a> 
+<br>
+<a href="budget_index.php">Back to Budget Index</a> 
 </body>
