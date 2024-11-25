@@ -30,7 +30,6 @@
                 "item_link" => $itemLink,
             ];
     
-
             // Save to database IF user is logged in
             if(isset($_SESSION['username'])){
                 try {
@@ -52,7 +51,10 @@
             
         }
     }
-
+    if(isset($_POST['element'])){
+        $i = intval($_POST['element']);
+        unset($_SESSION['purchases'][$i]);
+    }
 ?>
 
 <!DOCTYPE html>

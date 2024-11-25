@@ -63,7 +63,8 @@ function displayPurchases(){
     if(isset($_SESSION['purchases'])){ // This block of code pretty much just creates a table out of the purchases array
         $t = "<table> <th>Name</th> <th>Price</th> <th>Type</th> <th>Link</th>";
         $purchases = $_SESSION['purchases'];
-        foreach ($purchases as $p){
+        for ($i = 0; $i < count($purchases); $i++){
+            $p = $purchases[$i];
             $tr= "<tr>";
             $tr .= ("<td>" . $p['item_name'] . "</td>"); 
             $tr .= ("<td>$" . $p['item_price'] . "</td>"); 
@@ -74,6 +75,12 @@ function displayPurchases(){
             else{
                 $tr .= ("<td> N/A </td>");
             }
+           $tr .= ("<td><form method='post' action='purchase_interface.php' class='inline'>
+                <input type='hidden' name='element' value='$i'>
+                <button type='submit' name='submit_param' value='submit_value' class='link-button'>
+                Remove item
+                </button>
+                </form>");
             $tr .= "</tr>";
             $t.= $tr;
         }
