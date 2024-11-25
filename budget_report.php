@@ -1,4 +1,3 @@
-
 <?php 
 // This file will connect to the database to store information and retrieve data when it is time to create a budget analysis report.
 
@@ -118,13 +117,20 @@ function analyzeBudget($pdo, $budget) {
  * basically, it inserts a new user using username and password. user_id is auto increment so we dont have to fill that field out (currently debating if we even need
  * user_id. could instead make username the sole primary key and make usernames unique among users)
  */
-function insertNewUser($pdo, $username, $password){
+function insertNewUser($username, $password){
     try{
+        $pdo = new PDO("mysql:host=localhost", 'root', '');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $pdo->exec("USE purchases_db");
+
         $sql = "INSERT INTO `users` (username, password) VALUES (:username, :password)";
         $parameters = [":username" => $username, ":password" => md5($password)];
 
         $statement= $pdo->prepare($sql);
         $statement->execute($parameters);
+
+        echo("<br>Successfully added new user.");
     }
     catch (PDOException $e) {
         echo "Error inserting new user: " . $e->getMessage() . "<br>";
@@ -134,7 +140,7 @@ function insertNewUser($pdo, $username, $password){
 /**
  * basically, this takes a username and password and checks if a matching combination of username + password exists in the db. current implementation might not work
  */
-function validateCredentials($pdo, $username, $password){
+function validateCredentials($username, $password){
     try{
         $sql = "SELECT password FROM users WHERE username = :username";
         $stmt = $pdo->prepare($sql);
