@@ -1,0 +1,2 @@
+Shoes, 100, Groceries
+Socks, 300, Wants, https://www.amazon.com/

@@ -3,7 +3,7 @@
         return htmlspecialchars(strip_tags(trim($data)));
     }
     session_start();
-    require 'budget_report.php';
+    require 'requires/budget_report.php';
     
     if(isset($_POST['username']) && isset($_POST['password'])){
         $username = sanitize_input($_POST['username']);
@@ -19,6 +19,7 @@
     else if(isset($_POST['new_username']) && isset($_POST['new_password'])){
         insertNewUser($_POST['new_username'], $_POST['new_password']);
     }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,12 +30,13 @@
 </head>
 <body>
     <?php
+    include "includes/header.php";
         if(isset($_SESSION['username'])){
             echo "<p>Logged in. Hello, " . $_SESSION['username'] . "</p>";
             echo('<a href="start_interface.html">Continue to budget calculator</a>');
         }
         else{
-            include 'login_form.html';
+            include 'includes/login_form.html';
             echo('<a href="start_interface.html">Continue without login</a>');
         }
         

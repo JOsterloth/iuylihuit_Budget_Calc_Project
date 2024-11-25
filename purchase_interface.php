@@ -6,8 +6,8 @@
     session_start(); //I know in the todo list it says that this file will send stuff to database, but for now (since we havent covered) database I'll be using sessions
     // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
     //idk just riffin ya know?
-    require 'budget_report.php';
-    require 'budget_calc.php';
+    require 'requires/budget_report.php';
+    require 'requires/budget_calc.php';
 
     if (!isset($_SESSION['purchases'])) {
         $_SESSION['purchases'] = [];
@@ -57,6 +57,9 @@
     <link rel="stylesheet" href="./ui_styles.css">
 </head>
 <body>
+    <?php
+        include "includes/header.php";
+    ?>
     <h1>
         Add purchase:
 </h1>

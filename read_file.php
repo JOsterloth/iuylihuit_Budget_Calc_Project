@@ -66,6 +66,9 @@ function createTableFromArray($tableHeads, $purchases){
     <title>Document</title>
 </head>
 <body>
+    <?php
+        include "includes/header.php";
+    ?>
     <h1>The following will be added to your purchases:</h1>
     <?php
         $purchases=[];

@@ -1,7 +1,7 @@
 <?php // validate inputs from start_interface.html
 
 session_start();
-require 'budget_calc.php';
+require 'requires/budget_calc.php';
 
 $username = null;
 $totalfunds = null;
@@ -87,11 +87,9 @@ $remaining_money = $totalfunds - $budget_amount;
     <link rel="stylesheet" href="./ui_styles.css">
 </head>
 <body>
-    <h1 id="project_name"> <!--Shamelessly stole this from start_interface.html until I know what this page will look more like-->
-        Budget Calculator <img class="logo" alt="money_logo" src="money_logo.jpg"><br>
-        <p>~ We Judge You For Your Purchases ~</p>
-        <hr>
-    </h1>
+    <?php
+        include "includes/header.php";
+    ?>
     <p>
         <?php 
         echo "<h1>Hello, " . htmlspecialchars($username) . "</h1>"; 
