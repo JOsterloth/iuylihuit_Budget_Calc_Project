@@ -77,6 +77,7 @@ $budget_percentage = $_SESSION['budget_percentage'] ?? null;
 $budget_amount = $_SESSION['budget_amount'] ?? 0;
 $remaining_money = $totalfunds - $budget_amount;
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -115,9 +116,11 @@ $remaining_money = $totalfunds - $budget_amount;
     echo displayRemainingBudget();
 ?>
 <div>
-<a href="purchase_interface.php">Add purchase</a>
+<a href="purchase_interface.php">Add Purchase</a>
 </div>
-
+<div>
+<a href="budget_view.php">See Budget Report</a>
+</div>
 </body>
 </html>
 
