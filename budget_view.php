@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clear_purchases'])) {
     <?php
 
     echo displayPurchases();
-
     echo "<br>";
     echo displayRemainingBudget();
     echo "<br>";

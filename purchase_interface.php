@@ -3,9 +3,7 @@
      * @param
      */
     
-    session_start(); //I know in the todo list it says that this file will send stuff to database, but for now (since we havent covered) database I'll be using sessions
-    // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
-    //idk just riffin ya know?
+    session_start(); 
     require 'budget_report.php';
     require 'budget_calc.php';
 
@@ -35,17 +33,25 @@
         $i = intval($_POST['element']);
         unset($_SESSION['purchases'][$i]);
     }
-    if(isset($_POST['addtodb'])){ //this post cannot be sent if the username is not set, thus we dont have to check if it is
+
+    if (!isset($_SESSION['finalized_purchases'])) {
+        $_SESSION['finalized_purchases'] = [];
+    }
+    
+    if (isset($_POST['addtodb'])) {
         $i = intval($_POST['addtodb']);
         $p = $_SESSION['purchases'][$i];
-        if($p['item_link']){
+        $_SESSION['finalized_purchases'][] = $p;
+    
+        if ($p['item_link']) {
             insertNewPurchase_Link($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $p['item_link'], $_SESSION['username']);
-        }
-        else{
+        } else {
             insertNewPurchase_NoLink($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $_SESSION['username']);
         }
+    
         unset($_SESSION['purchases'][$i]);
     }
+    
 ?>
 
 <!DOCTYPE html>
