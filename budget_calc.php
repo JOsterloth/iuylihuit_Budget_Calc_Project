@@ -51,7 +51,7 @@ function displayRemainingBudget() {
         }
     }
 
-    $budget_remaining = $_SESSION['budget_amount'] - ($housing + $utilities + $groceries + $other + $wants);
+    $budget_remaining = $_SESSION['totalfunds'] - $_SESSION['budget_amount'] - ($housing + $utilities + $groceries + $other + $wants);
     $total_remaining = $_SESSION['totalfunds'] - ($housing + $utilities + $groceries + $other + $wants);
 
     $display = "<p>You have spent: <br> 

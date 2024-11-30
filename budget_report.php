@@ -95,8 +95,9 @@ function clearPurchasesTable($pdo) {
     }
 }
 
-function analyzeBudget($pdo, $budget) {
+function analyzeBudget($pdo, $budget, $funds) {
     try {
+        $spendingMoney = $funds - $budget;
         // Calculate the total value of all item prices
         $sql = "SELECT SUM(item_price) AS total_price FROM purchases";
         $stmt = $pdo->query($sql);
@@ -105,21 +106,21 @@ function analyzeBudget($pdo, $budget) {
         $totalPrice = $result['total_price'] ?? 0; // Default to 0 if no items are found
 
         echo "Total Spent: $" . $totalPrice . "<br>";
-        echo "Budget Threshold: $" . $budget . "<br>";
+        echo "Budget Threshold: $" . $spendingMoney . "<br>";
 
         // Compare total price with budget
-        if ($totalPrice > $budget) {
+        if ($totalPrice > $spendingMoney) {
             $overBudget = $totalPrice - $budget;
             echo "You are over budget by $" . $overBudget . ". Consider reducing expenses.<br>";
             if ($overBudget > $budget) { 
                 echo "Warning: Overspending detected.<br>";
             }
         } 
-        elseif ($totalPrice == $budget) {
+        elseif ($totalPrice == $spendingMoney) {
             echo "You are exactly on budget. Good job managing your expenses!<br>";
         } 
         else {
-            $remainingBudget = $budget - $totalPrice;
+            $remainingBudget = $spendingMoney - $totalPrice;
             echo "You are under budget by $" . $remainingBudget . ". Keep up the good work!<br>";
         }
     } catch (PDOException $e) {
