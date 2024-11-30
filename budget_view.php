@@ -31,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clear_purchases'])) {
     echo displayRemainingBudget();
     echo "<br>";
     $budget_amount = $_SESSION['budget_amount'] ?? 0;
-    echo analyzeBudget($pdo, $budget_amount);
+    $funds = $_SESSION['totalfunds'] ?? 0;
+    echo analyzeBudget($pdo, $budget_amount, $funds);
     ?>
     <form method="post">
         <button type="submit" name="clear_purchases">Clear All Purchases</button>
