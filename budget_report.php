@@ -95,38 +95,43 @@ function clearPurchasesTable($pdo) {
     }
 }
 
-function analyzeBudget($pdo, $budget, $funds) {
+function analyzeBudget($pdo, $totalFunds, $allocatedBudget) {  //changed the names so things were clearer
     try {
-        $spendingMoney = $funds - $budget;
+        // Calculate the spending limit
+        $spendingLimit = $totalFunds - $allocatedBudget;
+
         // Calculate the total value of all item prices
         $sql = "SELECT SUM(item_price) AS total_price FROM purchases";
         $stmt = $pdo->query($sql);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $totalPrice = $result['total_price'] ?? 0; // Default to 0 if no items are found
+        // Default to 0 if no items are found
+        $totalPrice = $result['total_price'] ?? 0; 
 
-        echo "Total Spent: $" . $totalPrice . "<br>";
-        echo "Budget Threshold: $" . $spendingMoney . "<br>";
+      
+        echo "Total Spent: $" . number_format($totalPrice, 2) . "<br>";
+        echo "Budget Threshold: $" . number_format($spendingLimit, 2) . "<br>";
 
         // Compare total price with budget
-        if ($totalPrice > $spendingMoney) {
-            $overBudget = $totalPrice - $budget;
-            echo "You are over budget by $" . $overBudget . ". Consider reducing expenses.<br>";
-            if ($overBudget > $budget) { 
+        if ($totalPrice > $spendingLimit) {
+            $overBudget = $totalPrice - $allocatedBudget;
+            echo "You are over budget by $" . number_format($overBudget, 2) . ". Consider reducing expenses.<br>";
+            if ($overBudget > $allocatedBudget) { 
                 echo "Warning: Overspending detected.<br>";
             }
         } 
-        elseif ($totalPrice == $spendingMoney) {
+        elseif ($totalPrice == $spendingLimit) {
             echo "You are exactly on budget. Good job managing your expenses!<br>";
         } 
         else {
-            $remainingBudget = $spendingMoney - $totalPrice;
-            echo "You are under budget by $" . $remainingBudget . ". Keep up the good work!<br>";
+            $remainingBudget = $spendingLimit - $totalPrice;
+            echo "You are under budget by $" . number_format($remainingBudget, 2) . ". Keep up the good work!<br>";
         }
     } catch (PDOException $e) {
         echo "Error analyzing budget: " . $e->getMessage() . "<br>";
     }
 }
+
 /**
  * basically, it inserts a new user using username and password. user_id is auto increment so we dont have to fill that field out (currently debating if we even need
  * user_id. could instead make username the sole primary key and make usernames unique among users)
