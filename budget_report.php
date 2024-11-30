@@ -1,60 +1,6 @@
 <?php 
 // This file will connect to the database to store information and retrieve data when it is time to create a budget analysis report.
 
-/*
-
-$host = 'localhost';
-$username = 'root';
-$password = '';
-
-try {
-    $pdo = new PDO("mysql:host=$host", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
-
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS purchases_db");
-    echo "Database 'purchases_db' created successfully (if it didn't exist already).<br>";
-
-    // Switch to the 'purchases_db' database
-    $pdo->exec("USE purchases_db");
-    // Add `purchases` table
-    $createTableSql = "
-    CREATE TABLE IF NOT EXISTS `purchases` (
-        `item_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-        `username` varchar(15) NOT NULL,
-        `item_name` varchar(256) NOT NULL,
-        `item_price` double NOT NULL,
-        `item_type` varchar(256) NOT NULL,
-        `link` varchar(256) DEFAULT NULL COMMENT 'This category is optional',
-        PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-    ";
-
-    $pdo->exec($createTableSql);
-    echo "Table 'purchases' created successfully.<br>";
-
-    //add users table
-    $createTableSql ="
-    CREATE TABLE `users` (
-        `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-        `username` varchar(15) NOT NULL,
-        `password` varchar(64) NOT NULL,
-        PRIMARY KEY (`user_id`,`username`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
-
-    $pdo->exec($createTableSql);
-    echo "Table 'users' created successfully.<br>";
-
-    $dbname = $pdo->query('SELECT database()')->fetchColumn();  
-    echo "Connected to the database: " . $dbname; 
-
-} 
-catch (PDOException $e) {
-    // Handle any exceptions (e.g., connection failure)
-    echo "Error!: " . $e->getMessage() . "<br>";
-    die();  // Exit the script if the connection fails
-}
-
-*/
 
 include_once "pdo_connect.php";
 
@@ -141,13 +87,17 @@ function clearPurchasesTable($pdo) {
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         echo "All items have been removed from the purchases table.<br>";
+        if (isset($_SESSION['finalized_purchases'])) {
+            $_SESSION['finalized_purchases'] = [];
+        } 
     } catch (PDOException $e) {
         echo "Error clearing purchases table: " . $e->getMessage() . "<br>";
     }
 }
 
-function analyzeBudget($pdo, $budget) {
+function analyzeBudget($pdo, $budget, $funds) {
     try {
+        $spendingMoney = $funds - $budget;
         // Calculate the total value of all item prices
         $sql = "SELECT SUM(item_price) AS total_price FROM purchases";
         $stmt = $pdo->query($sql);
@@ -156,21 +106,21 @@ function analyzeBudget($pdo, $budget) {
         $totalPrice = $result['total_price'] ?? 0; // Default to 0 if no items are found
 
         echo "Total Spent: $" . $totalPrice . "<br>";
-        echo "Budget Threshold: $" . $budget . "<br>";
+        echo "Budget Threshold: $" . $spendingMoney . "<br>";
 
         // Compare total price with budget
-        if ($totalPrice > $budget) {
+        if ($totalPrice > $spendingMoney) {
             $overBudget = $totalPrice - $budget;
             echo "You are over budget by $" . $overBudget . ". Consider reducing expenses.<br>";
             if ($overBudget > $budget) { 
                 echo "Warning: Overspending detected.<br>";
             }
         } 
-        elseif ($totalPrice == $budget) {
+        elseif ($totalPrice == $spendingMoney) {
             echo "You are exactly on budget. Good job managing your expenses!<br>";
         } 
         else {
-            $remainingBudget = $budget - $totalPrice;
+            $remainingBudget = $spendingMoney - $totalPrice;
             echo "You are under budget by $" . $remainingBudget . ". Keep up the good work!<br>";
         }
     } catch (PDOException $e) {

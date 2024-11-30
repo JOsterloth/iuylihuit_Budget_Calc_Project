@@ -17,7 +17,7 @@
         }
     }
     else if(isset($_POST['new_username']) && isset($_POST['new_password'])){
-        insertNewUser($_POST['new_username'], $_POST['new_password']);
+        insertNewUser($pdo,$_POST['new_username'], $_POST['new_password']);
     }
 ?>
 <!DOCTYPE html>
