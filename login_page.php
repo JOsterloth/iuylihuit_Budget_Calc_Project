@@ -27,10 +27,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log-in to budget calculator</title>
 </head>
+    <link rel="stylesheet" href="ui_styles.css">
 <body>
     <?php
         if(isset($_SESSION['username'])){
-            echo "<p>Logged in. Hello, " . $_SESSION['username'] . "</p>";
+            echo "<h1>Logged in. Hello, " . $_SESSION['username'] . "</h1>";
             echo('<a href="start_interface.html">Continue to budget calculator</a>');
         }
         else{
