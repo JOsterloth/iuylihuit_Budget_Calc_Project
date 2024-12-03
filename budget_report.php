@@ -31,16 +31,21 @@ function displayItemPrices($pdo) {
 // insertNewPurchase() function that includes link
 function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
     try {
+        echo("<br>" . $link);
+        echo("<br>" . $name);
+        echo("<br>" . $price);
+        echo("<br>" . $type);
+        echo("<br>" . $username);
         $insertItemSql = "
         INSERT INTO purchases (item_name, item_price, item_type, link, username)
-        VALUES (:name, :price, :type, :link, :username)";
+        VALUES (:item_name, :item_price, :item_type, :link, :username)";
         
         $stmt = $pdo->prepare($insertItemSql);
 
         $stmt->bindParam(':item_name', $name, PDO::PARAM_STR);
         $stmt->bindParam(':item_price', $price, PDO::PARAM_INT);
         $stmt->bindParam(':item_type', $type, PDO::PARAM_STR);
-        $stmt->bindParam(':item_link', $link, PDO::PARAM_STR);
+        $stmt->bindParam(':link', $link, PDO::PARAM_STR);
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         // Execute the statement
         $stmt->execute();
@@ -98,7 +103,7 @@ function analyzeBudget($pdo, $totalFunds, $allocatedBudget) {  //changed the nam
     try {
         // Calculate the spending limit
         $spendingLimit = $totalFunds - $allocatedBudget;
-
+        
         // Calculate the total value of all item prices
         $sql = "SELECT SUM(item_price) AS total_price FROM purchases";
         $stmt = $pdo->query($sql);
