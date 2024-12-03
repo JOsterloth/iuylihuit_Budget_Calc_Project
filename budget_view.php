@@ -14,9 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['clear_purchases'])) {
 }
 
 // Fetch and display budget data
-$budget_amount = $_SESSION['budget_amount'] ?? 0;
+$budget_amount = $_SESSION['budget_amount'] ?? 0; 
 $your_purchases = $_SESSION['your_purchases'] ?? "No purchases available.";
-$allocatedBudget = $_SESSION['$allocatedBudget'] ?? 0;
+// $allocatedBudget = $_SESSION['allocatedBudget'] ?? 0; //should only need $totalfunds, $budget_amount, and sum cost of purchases
+// to analyze budget
+$totalFunds = $_SESSION['totalfunds'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +44,7 @@ $allocatedBudget = $_SESSION['$allocatedBudget'] ?? 0;
     <div class="budget-analysis">
         <h2>Budget Analysis:</h2>
         <?php
-        echo analyzeBudget($pdo, $budget_amount,$allocatedBudget);
+        echo analyzeBudget($pdo, $totalFunds,$budget_amount);
         ?>
     </div>
 

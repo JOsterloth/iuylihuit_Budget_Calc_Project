@@ -28,7 +28,7 @@
                 "item_type" => $itemType,
                 "item_link" => $itemLink,
             ];   
-            echo(count($_SESSION['purchases']));        
+            // echo(count($_SESSION['purchases']));        
         }
     }
     if(isset($_POST['element'])){
