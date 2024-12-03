@@ -50,7 +50,7 @@ $allocatedBudget = $_SESSION['$allocatedBudget'] ?? 0;
         <button type="submit" name="clear_purchases">Clear All Purchases</button>
     </form>
     <div>
-        <a href="budget_index.php">Return To Budget Index</a>
+        <a href="budget_index.php"><button>Return To Budget Index</button></a>
     </div>
 </body>
 </html>
