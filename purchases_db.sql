@@ -45,6 +45,7 @@ UNLOCK TABLES;
 --
 -- Table structure for table `users`
 --
+
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -52,7 +53,7 @@ CREATE TABLE `users` (
   `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(15) NOT NULL,
   `password` varchar(64) NOT NULL,
-  PRIMARY KEY (`user_id`, `username`)
+  PRIMARY KEY (`user_id`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
