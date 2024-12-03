@@ -130,10 +130,11 @@ $remaining_money = $totalfunds - $budget_amount;
     </form>
 
 <div>
-<a href="purchase_interface.php">Add Purchase</a>
+<a href="purchase_interface.php"><button>Add Purchase</button></a>
 </div>
+<br>
 <div>
-<a href="budget_view.php">See Budget Report</a>
+<a href="budget_view.php"><button>See Budget Report</button></a>
 </div>
 </body>
 </html>
