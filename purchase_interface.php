@@ -49,7 +49,6 @@
         $p = $_SESSION['purchases'][$i];
         $_SESSION['finalized_purchases'][] = $p;
         if (isset($p['item_link'])) {
-            echo("Before adding link");
             insertNewPurchase_Link($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $p['item_link'], $_SESSION['username']);
         } else {
             insertNewPurchase_NoLink($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $_SESSION['username']);

@@ -17,14 +17,15 @@ function readFileToArray($file_superglobal) {
         
         while (!feof($openedFile)) {
             $line = fgetcsv($openedFile);
-
             // If the line is not false and has at least 3 elements
             if ($line && count($line) >= 3) {
+                $itemLink = $line[3] ?? "N/A";
+                //echo($itemLink);
                 $potentialPurchases[] = [
                     "item_name" => $line[0],
                     "item_price" => $line[1],
                     "item_type" => $line[2],
-                    "item_link" => $line[3] ?? "N/A"
+                    "item_link" => $itemLink,   
                 ];
             } elseif ($line) {
                 // If the line exists but has fewer than 3 elements
@@ -98,11 +99,22 @@ if ($fileSelected && isset($_FILES['textfile']) && $_FILES['textfile']['error'] 
         $_SESSION['purchases'] = [];
     }
     foreach ($purchases as $p) {
-        $_SESSION['purchases'][] = [
-            "item_name" => $p['item_name'],
-            "item_price" => $p['item_price'],
-            "item_type" => $p['item_type']
-        ];
+        if(([$p['item_link']])!==null){
+            $_SESSION['purchases'][] = [
+                "item_name" => $p['item_name'],
+                "item_price" => $p['item_price'],
+                "item_type" => $p['item_type'],
+                "item_link" => $p['item_link']
+            ];
+        }
+        else{
+            $_SESSION['purchases'][] = [
+                "item_name" => $p['item_name'],
+                "item_price" => $p['item_price'],
+                "item_type" => $p['item_type']
+            ];
+        }
+        
     }
 
 }

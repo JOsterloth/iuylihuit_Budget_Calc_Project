@@ -31,11 +31,6 @@ function displayItemPrices($pdo) {
 // insertNewPurchase() function that includes link
 function insertNewPurchase_Link($pdo, $name, $price, $type, $link, $username) {
     try {
-        echo("<br>" . $link);
-        echo("<br>" . $name);
-        echo("<br>" . $price);
-        echo("<br>" . $type);
-        echo("<br>" . $username);
         $insertItemSql = "
         INSERT INTO purchases (item_name, item_price, item_type, link, username)
         VALUES (:item_name, :item_price, :item_type, :link, :username)";
