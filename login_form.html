@@ -9,15 +9,15 @@ style=" text-align:center"> Login:
     </div>
     <div class="password_input">
         <label for="password">Password: </label><br>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required >
     </div>
     <button type="submit">Login</button>
 </form>
+<br>
 <h3
  style=" text-align:center"> New user? Sign-up:
 </h3>
 <form action="./login_page.php" method="post">
-    <link rel="stylesheet" href="ui_styles.css">
     <div class="new_username_input">
         <label for="new_username">Username: </label><br>
         <input type="text" id="new_username" name="new_username" required>
@@ -28,5 +28,11 @@ style=" text-align:center"> Login:
         <input type="password" id="new_password" name="new_password" required>
     </div>
     <button type="submit">Sign-up</button>
-
 </form>
+
+    <div style="text-align:center; margin-top: 20px;">
+        <form action="./login_page.php" method="post">
+            <input type="hidden" name="guest" value="true">
+            <button type="submit" class="guest-button">Continue as Guest</button>
+        </form>
+    </div>
