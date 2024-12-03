@@ -103,5 +103,5 @@
     echo $your_purchases;   
 ?>
 <br>
-<a href="budget_index.php">Back to Budget Index</a> 
+<a href="budget_index.php"><button>Back to Budget Index</button></a>  
 </body>
