@@ -3,9 +3,7 @@
      * @param
      */
     
-    session_start(); //I know in the todo list it says that this file will send stuff to database, but for now (since we havent covered) database I'll be using sessions
-    // maybe, instead of saving straight to the database, we'll use a session variable and allow user to save to database using a username and password?
-    //idk just riffin ya know?
+    session_start(); 
     require 'budget_report.php';
     require 'budget_calc.php';
 
@@ -23,31 +21,42 @@
         if (empty($itemName) || $itemPrice <= 0 || empty($itemType)) {
             echo "All required fields must be filled correctly.<br>";
         } else {
+   
             $_SESSION['purchases'][] = [
                 "item_name" => $itemName,
                 "item_price" => $itemPrice,
                 "item_type" => $itemType,
                 "item_link" => $itemLink,
-            ];
-    
-            // Save to database
-            try {
-                if ($itemLink) {
-                    insertNewPurchase_Link($pdo, $itemName, $itemPrice, $itemType, $itemLink);
-                }
-                
-                else {    
-                    insertNewPurchase_NoLink($pdo, $itemName, $itemPrice, $itemType);
-                }
-                echo "Purchase successfully added to the database.<br>";
-            } 
-        
-            catch (Exception $e) {
-                echo "Error adding purchase to the database: " . $e->getMessage() . "<br>";
-            }
+            ];   
+            echo(count($_SESSION['purchases']));        
         }
     }
+    if(isset($_POST['element'])){
+        $p = $_SESSION['purchases'];
+        $i = intval($_POST['element']);
+        //print_r($_SESSION['purchases']);
+        removePurchase($i);
+        //print_r($_SESSION['purchases']);
 
+    }
+
+    if (!isset($_SESSION['finalized_purchases'])) {
+        $_SESSION['finalized_purchases'] = [];
+    }
+    
+    if (isset($_POST['addtodb'])) {
+        $i = intval($_POST['addtodb']);
+        $p = $_SESSION['purchases'][$i];
+        $_SESSION['finalized_purchases'][] = $p;
+        if (isset($p['item_link'])) {
+            insertNewPurchase_Link($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $p['item_link'], $_SESSION['username']);
+        } else {
+            insertNewPurchase_NoLink($pdo, $p['item_name'], $p['item_price'], $p['item_type'], $_SESSION['username']);
+        }
+    
+        removePurchase($i);
+    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -95,8 +104,9 @@
 <br>
 
 <?php 
-    echo displayPurchases();   
+    $your_purchases = displayPurchases();
+    echo $your_purchases;   
 ?>
-
-<a href="budget_index.php">Back to budget index</a> 
+<br>
+<a href="budget_index.php"><button>Back to Budget Index</button></a>  
 </body>

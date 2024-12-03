@@ -1,4 +1,2 @@
-1,1, aaa
-2,2, aaa
-3,3, aaa
-4,4, aaa
+Shoes, 100, Groceries
+Socks, 300, Wants, https://www.amazon.com/
