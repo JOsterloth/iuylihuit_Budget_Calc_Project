@@ -44,7 +44,7 @@ $totalFunds = $_SESSION['totalfunds'] ?? 0;
     <div class="budget-analysis">
         <h2>Budget Analysis:</h2>
         <?php
-        echo analyzeBudget($pdo, $totalFunds,$budget_amount);
+        echo analyzeBudget($pdo, $totalFunds,$budget_amount, $_SESSION['username']);
         ?>
     </div>
 

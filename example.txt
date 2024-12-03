@@ -1,2 +1,5 @@
 Shoes, 100, Groceries
 Socks, 300, Wants, https://www.amazon.com/
+Rent, 20, Housing
+Textbooks, 300, Other, https://www.uww.edu/
+A fifth purchase, 10, Other

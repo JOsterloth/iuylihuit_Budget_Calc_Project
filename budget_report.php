@@ -94,16 +94,18 @@ function clearPurchasesTable($pdo) {
     }
 }
 
-function analyzeBudget($pdo, $totalFunds, $allocatedBudget) {  //changed the names so things were clearer
+function analyzeBudget($pdo, $totalFunds, $allocatedBudget, $username) {  //changed the names so things were clearer
     try {
         // Calculate the spending limit
         $spendingLimit = $totalFunds - $allocatedBudget;
         
         // Calculate the total value of all item prices
-        $sql = "SELECT SUM(item_price) AS total_price FROM purchases";
-        $stmt = $pdo->query($sql);
+        $sql = "SELECT SUM(item_price) AS total_price FROM purchases WHERE username = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+        
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
         // Default to 0 if no items are found
         $totalPrice = $result['total_price'] ?? 0; 
 
