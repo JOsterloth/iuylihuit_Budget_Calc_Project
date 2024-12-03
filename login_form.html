@@ -1,5 +1,5 @@
-<h3>
-    Login:
+<link rel="stylesheet" href="ui_styles.css">
+<h3 style=" text-align:center"> Login:
 </h3>
 <form action="./login_page.php" method="post">
     <div class="username_input">
@@ -12,8 +12,8 @@
     </div>
     <button type="submit">Login</button>
 </form>
-<h3>
-    New user? Sign-up:
+<br>
+<h3 style=" text-align:center"> New user? Sign-up:
 </h3>
 <form action="./login_page.php" method="post">
     <div class="new_username_input">
@@ -21,8 +21,17 @@
         <input type="text" id="new_username" name="new_username" required>
     </div>
     <div class="new_password_input">
+        <input type="hidden" name="signedup" value="true">
         <label for="new_password">Password: </label><br>
         <input type="password" id="new_password" name="new_password" required>
     </div>
     <button type="submit">Sign-up</button>
 </form>
+
+<div style="text-align:center; margin-top: 20px;">
+    <!-- making some last minute re-adjustment here. this form does nothing, but I've no choice but to leave it be-->
+    <form action="./start_interface.html" method="post">
+        <input type="hidden" name="guest" value="true">
+        <button type="submit" class="guest-button">Continue as Guest</button>
+    </form>
+</div>

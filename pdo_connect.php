@@ -10,7 +10,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
     $pdo->exec("CREATE DATABASE IF NOT EXISTS purchases_db");
-    echo "Database 'purchases_db' created successfully (if it didn't exist already).<br>";
+    // echo "Database 'purchases_db' created successfully (if it didn't exist already).<br>";
 
     // Switch to the 'purchases_db' database
     $pdo->exec("USE purchases_db");
@@ -28,7 +28,7 @@ try {
     ";
 
     $pdo->exec($createTableSql);
-    echo "Table 'purchases' created successfully.<br>";
+    // echo "Table 'purchases' created successfully.<br>";
 
     //add users table
     $createTableSql = "
@@ -40,10 +40,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
 
     $pdo->exec($createTableSql);
-    echo "Table 'users' created successfully.<br>";
+    // echo "Table 'users' created successfully.<br>";
 
     $dbname = $pdo->query('SELECT database()')->fetchColumn();  
-    echo "Connected to the database: " . $dbname."<br>"; 
+    // echo "Connected to the database: " . $dbname."<br>"; 
 
 } 
 catch (PDOException $e) {
